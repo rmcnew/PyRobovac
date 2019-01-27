@@ -52,8 +52,14 @@ DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
 
+# robovac vacuum
+VACUUM_CLEAN = 1
+
 # robovac battery
-BATTERY_FULL = 100
+BATTERY_FULL = 300
+MOVE_DRAIN = 1
+VACUUM_DRAIN = 2
+
 
 
 def get_random_location():
