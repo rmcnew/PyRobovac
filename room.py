@@ -16,9 +16,21 @@
 
 from shared import *
 from wall import Wall
+from math import fabs
 
 # room contains methods to create the elements that make up the simulated 
 # room where the robovacs operate
+
+# fill a block
+def fill_block(block, walls):
+    start_x = block[X] * int(GRID_WIDTH / 3)
+    stop_x = (block[X] + 1) * int(GRID_WIDTH / 3)
+    start_y = block[Y] * int(GRID_HEIGHT / 3)
+    stop_y = (block[Y] + 1) * int(GRID_HEIGHT / 3)
+    for x in range(start_x, stop_x):
+        for y in range(start_y, stop_y):
+            walls.append(Wall(x, y))
+
 
 # create the walls
 def create_walls():
@@ -34,9 +46,12 @@ def create_walls():
     # 1) divide the room into a 3 x 3 grid
     # 2) randomly choose two blocks and fill them with wall
     first_block = get_random_block()
-    print("first block: {}".format(first_block))
+    #print("first block: {}".format(first_block))
     second_block = get_random_block()
-    while (first_block[X] == second_block[X] and first_block[Y] == second_block[Y]):
+    while (first_block[X] == second_block[X] and first_block[Y] == second_block[Y]) or \
+            (fabs(first_block[X] - second_block[X]) == 1 and fabs(first_block[Y] - second_block[Y]) == 1):
         second_block = get_random_block()
-    print("second_block: {}".format(second_block))
+    #print("second_block: {}".format(second_block))
+    fill_block(first_block, walls)
+    fill_block(second_block, walls)
     return walls
