@@ -29,9 +29,8 @@ import room
 grid = numpy.zeros((GRID_WIDTH, GRID_HEIGHT), numpy.int8)
 # generate room
 room.create_walls(grid) # such that room has odd shape
-robovacs = []
-dropoffs = room.create_dropoffs()
-# create_furniture()
+room.create_dropoffs(grid)
+room.create_furniture(grid)
 # create_dogs()
 # create_chargers()
 # create_robovacs()

@@ -22,8 +22,8 @@ from drawable import Drawable
 # room contains methods to create the elements that make up the simulated 
 # room where the robovacs operate
 
-# fill a block
-def fill_block(block, grid):
+# fill a wall block
+def fill_wall_block(block, grid):
     start_x = block[X] * int(GRID_WIDTH / 3)
     stop_x = (block[X] + 1) * int(GRID_WIDTH / 3)
     start_y = block[Y] * int(GRID_HEIGHT / 3)
@@ -52,12 +52,57 @@ def create_walls(grid):
             (fabs(first_block[X] - second_block[X]) == 1 and fabs(first_block[Y] - second_block[Y]) == 1):
         second_block = get_random_block()
     #print("second_block: {}".format(second_block))
-    fill_block(first_block, grid)
-    fill_block(second_block, grid)
+    fill_wall_block(first_block, grid)
+    fill_wall_block(second_block, grid)
+
+
+# fill a dropoff block
+def fill_dropoff_block(grid):
+    block = get_random_location()
+    start_x = block[X]
+    start_y = block[Y]
+    stop_x = min(block[X] + DROPOFF_SIZE, GRID_WIDTH)
+    stop_y = min(block[Y] + DROPOFF_SIZE, GRID_HEIGHT)
+    clear = True
+    for x in range(start_x, stop_x):
+        for y in range(start_y, stop_y):
+            if x <= GRID_WIDTH and y <= GRID_HEIGHT and grid[x][y] != Drawable.CLEAN.value:
+                clear = False
+    if x <= GRID_WIDTH and y <= GRID_HEIGHT and clear:
+        for x in range(start_x, stop_x):
+            for y in range(start_y, stop_y):
+                grid[x][y] = Drawable.DROPOFF.value
+    return clear
 
 # create the dropoffs
-def create_dropoffs():
-    dropoffs = []
+def create_dropoffs(grid):
+    dropoffs_left = DROPOFF_COUNT
+    while dropoffs_left > 0:
+        if fill_dropoff_block(grid):
+            dropoffs_left = dropoffs_left - 1
 
-    return dropoffs
+# fill a furniture block
+def fill_furniture_block(grid):
+    block = get_random_location()
+    start_x = block[X]
+    start_y = block[Y]
+    stop_x = min(block[X] + FURNITURE_SIZE, GRID_WIDTH)
+    stop_y = min(block[Y] + FURNITURE_SIZE, GRID_HEIGHT)
+    clear = True
+    for x in range(start_x, stop_x):
+        for y in range(start_y, stop_y):
+            if x <= GRID_WIDTH and y <= GRID_HEIGHT and grid[x][y] != Drawable.CLEAN.value:
+                clear = False
+    if x <= GRID_WIDTH and y <= GRID_HEIGHT and clear:
+        for x in range(start_x, stop_x):
+            for y in range(start_y, stop_y):
+                grid[x][y] = Drawable.FURNITURE.value
+    return clear
+
+# create the furniture
+def create_furniture(grid):
+    furniture_left = FURNITURE_COUNT
+    while furniture_left > 0:
+        if fill_furniture_block(grid):
+            furniture_left = furniture_left - 1
 

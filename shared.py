@@ -60,10 +60,23 @@ BATTERY_FULL = 300
 MOVE_DRAIN = 1
 VACUUM_DRAIN = 2
 
+# dropoff
+DROPOFF_SIZE = 3
+DROPOFF_COUNT = 3
 
+# furniture
+FURNITURE_SIZE = 4
+FURNITURE_COUNT = 7 
 
 def get_random_location():
     return {X: random.randint(0, GRID_WIDTH - 1), Y: random.randint(0, GRID_HEIGHT - 1)}
 
 def get_random_block():
     return {X: random.randint(0, 2), Y: random.randint(0, 2)}
+
+def min(a, b):
+    if a < b:
+        return a
+    else:
+        return b
+
