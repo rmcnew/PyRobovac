@@ -17,16 +17,20 @@
 
 import sys
 
+import numpy
 import pygame
 from pygame.locals import *
 
 from shared import *
+from drawable import Drawable
 import room
 
+# create grid 
+grid = numpy.zeros((GRID_WIDTH, GRID_HEIGHT), numpy.int8)
 # generate room
-walls = room.create_walls() # such that room has odd shape
+room.create_walls(grid) # such that room has odd shape
 robovacs = []
-# create_dropoffs()
+dropoffs = room.create_dropoffs()
 # create_furniture()
 # create_dogs()
 # create_chargers()
@@ -64,13 +68,6 @@ def run_game():
         # update display
         DISPLAY_SURF.fill(BG_COLOR.value)
         draw_grid()
-        draw_drawables(walls)
-        # draw_dropoffs()
-        # draw_furniture()
-        # draw_dogs()
-        # draw_chargers()
-        draw_drawables(robovacs)
-        # draw_dirt()
 
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
@@ -81,17 +78,23 @@ def terminate():
     sys.exit()
 
 
-def draw_drawables(drawables):
-    for drawable in drawables:
-        drawable.draw(DISPLAY_SURF)
-
-
 def draw_grid():
+    # draw gridlines
     for x in range(0, WINDOW_WIDTH, CELL_SIZE):  # draw vertical lines
         pygame.draw.line(DISPLAY_SURF, Colors.DARK_GRAY.value, (x, 0), (x, WINDOW_HEIGHT))
     for y in range(0, WINDOW_HEIGHT, CELL_SIZE):  # draw horizontal lines
         pygame.draw.line(DISPLAY_SURF, Colors.DARK_GRAY.value, (0, y), (WINDOW_WIDTH, y))
-
+    # draw grid objects
+    for x in range(0, GRID_WIDTH):
+        for y in range(0, GRID_HEIGHT):
+            if grid[x][y] != 0:
+                (lineColor, fillColor) = Drawable(grid[x][y]).color
+                cell_x = x * CELL_SIZE
+                cell_y = y * CELL_SIZE
+                rect = pygame.Rect(cell_x, cell_y, CELL_SIZE, CELL_SIZE)
+                pygame.draw.rect(DISPLAY_SURF, lineColor.value, rect)
+                inner_rect = pygame.Rect(cell_x + 4, cell_y + 4, CELL_SIZE - 8, CELL_SIZE - 8)
+                pygame.draw.rect(DISPLAY_SURF, fillColor.value, inner_rect)
 
 if __name__ == '__main__':
     main()

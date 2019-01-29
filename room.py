@@ -14,34 +14,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from shared import *
-from wall import Wall
 from math import fabs
+
+from shared import *
+from drawable import Drawable
 
 # room contains methods to create the elements that make up the simulated 
 # room where the robovacs operate
 
 # fill a block
-def fill_block(block, walls):
+def fill_block(block, grid):
     start_x = block[X] * int(GRID_WIDTH / 3)
     stop_x = (block[X] + 1) * int(GRID_WIDTH / 3)
     start_y = block[Y] * int(GRID_HEIGHT / 3)
     stop_y = (block[Y] + 1) * int(GRID_HEIGHT / 3)
     for x in range(start_x, stop_x):
         for y in range(start_y, stop_y):
-            walls.append(Wall(x, y))
+            grid[x][y] = Drawable.WALL.value
 
 
 # create the walls
-def create_walls():
-    walls = []
+def create_walls(grid):
     # create a border wall so robovacs stay inside the window
     for x in range(0, GRID_WIDTH):
-        walls.append(Wall(x, 1))
-        walls.append(Wall(x, GRID_HEIGHT - 1))
+        grid[x][1] = Drawable.WALL.value
+        grid[x][GRID_HEIGHT - 1] = Drawable.WALL.value
     for y in range(0, GRID_HEIGHT):
-        walls.append(Wall(0, y))
-        walls.append(Wall(GRID_WIDTH - 1, y))
+        grid[0][y] = Drawable.WALL.value
+        grid[GRID_WIDTH - 1][y] = Drawable.WALL.value
     # randomly generate some wall sections to give the room an unusual shape:
     # 1) divide the room into a 3 x 3 grid
     # 2) randomly choose two blocks and fill them with wall
@@ -52,6 +52,12 @@ def create_walls():
             (fabs(first_block[X] - second_block[X]) == 1 and fabs(first_block[Y] - second_block[Y]) == 1):
         second_block = get_random_block()
     #print("second_block: {}".format(second_block))
-    fill_block(first_block, walls)
-    fill_block(second_block, walls)
-    return walls
+    fill_block(first_block, grid)
+    fill_block(second_block, grid)
+
+# create the dropoffs
+def create_dropoffs():
+    dropoffs = []
+
+    return dropoffs
+

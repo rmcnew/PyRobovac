@@ -14,17 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# dog class
-from drawable import Drawable
+# dog module
 
-
-class Dog(Drawable):
-    def __init__(self, start_x, start_y, line_color, fill_color):
-        super().__init__(start_x, start_y, line_color, fill_color)
-
-
-
-
-
-
-
+def bark():
+    print "Woof"

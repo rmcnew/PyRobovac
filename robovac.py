@@ -14,19 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# robovac class
+# robovac module
 from drawable import Drawable
 from shared import BATTERY_FULL
 
-
-class Robovac(Drawable):
-    def __init__(self, start_x, start_y, line_color, fill_color, home_charger):
-        super().__init__(start_x, start_y, line_color, fill_color)
-        self.charger = home_charger
-        self.battery_charge = BATTERY_FULL
-
-
-
-
-
-
+def think():
+    print "Thought"

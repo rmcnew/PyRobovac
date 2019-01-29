@@ -16,22 +16,69 @@
 
 # drawable, a base class for drawable point objects
 
+from enum import Enum
 from shared import *
+from colors import Colors
 import pygame
 from pygame.locals import *
 
 
-class Drawable:
-    def __init__(self, x, y, line_color, fill_color):
-        self.x = x
-        self.y = y
-        self.lineColor = line_color
-        self.fillColor = fill_color
+class Drawable(Enum):
+    CLEAN = 0
+    WALL = 1
+    DROPOFF = 2
+    FURNITURE = 3
+    DOG_1 = 4
+    DOG_2 = 5
+    DOG_3 = 6
+    DOG_4 = 7
+    CHARGER_1 = 8
+    CHARGER_2 = 9
+    CHARGER_3 = 10
+    CHARGER_4 = 11
+    ROBOVAC_1 = 12
+    ROBOVAC_2 = 13
+    ROBOVAC_3 = 14
+    ROBOVAC_4 = 15
+    DIRTY = 16
+    FILTHY = 17
 
-    def draw(self, DISPLAY_SURF):
-        x = self.x * CELL_SIZE
-        y = self.y * CELL_SIZE
-        rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
-        pygame.draw.rect(DISPLAY_SURF, self.lineColor.value, rect)
-        inner_rect = pygame.Rect(x + 4, y + 4, CELL_SIZE - 8, CELL_SIZE - 8)
-        pygame.draw.rect(DISPLAY_SURF, self.fillColor.value, inner_rect)
+    @property
+    def color(self):
+        if self.value == 0:
+            return (Colors.BLACK, Colors.BLACK)
+        elif self.value == 1:
+            return (Colors.DARK_GRAY, Colors.DARK_GRAY)
+        elif self.value == 2:
+            return (Colors.WHITE, Colors.WHITE)
+        elif self.value == 3:
+            return (Colors.PINK, Colors.PINK) 
+        elif self.value == 4:
+            return (Colors.YELLOW, Colors.YELLOW)
+        elif self.value == 5:
+            return (Colors.DARK_YELLOW, Colors.DARK_YELLOW)
+        elif self.value == 6:
+            return (Colors.PALE_YELLOW, Colors.PALE_YELLOW)
+        elif self.value == 7:
+            return (Colors.DARKER_YELLOW, Colors.DARKER_YELLOW)
+        elif self.value == 8:
+            return (Colors.DARK_RED, Colors.DARK_RED)
+        elif self.value == 9:
+            return (Colors.DARK_GREEN, Colors.DARK_GREEN)
+        elif self.value == 10:
+            return (Colors.DARK_BLUE, Colors.DARK_BLUE)
+        elif self.value == 11:
+            return (Colors.DARK_VIOLET, Colors.DARK_VIOLET)
+        elif self.value == 12:
+            return (Colors.RED, Colors.RED)
+        elif self.value == 13:
+            return (Colors.GREEN, Colors.GREEN)
+        elif self.value == 14:
+            return (Colors.BLUE, Colors.BLUE)
+        elif self.value == 15:
+            return (Colors.VIOLET, Colors.VIOLET)
+        elif self.value == 16:
+            return (Colors.BROWN, Colors.BROWN)
+        elif self.value == 17:
+            return (Colors.DARK_BROWN, Colors.DARK_BROWN)
+

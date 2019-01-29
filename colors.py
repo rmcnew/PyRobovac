@@ -21,12 +21,22 @@ from enum import Enum
 
 class Colors(Enum):
     # R    G    B
-    WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
     BLUE = (0, 0, 255)
-    DARK_GREEN = (0, 155, 0)
+    BROWN = (204, 102, 0)
     DARK_BLUE = (0, 0, 155)
+    DARK_BROWN = (153, 76, 0)
     DARK_GRAY = (40, 40, 40)
-    YELLOW = (155, 155, 0)
+    DARK_GREEN = (0, 155, 0)
+    DARK_RED = (155, 0, 0)
+    DARK_VIOLET = (153, 0, 153)
+    DARK_YELLOW = (204, 204, 0)
+    DARKER_YELLOW = (153, 153, 0)
+    GREEN = (0, 255, 0)
+    PALE_YELLOW = (255, 255, 153)
+    PINK = (255, 155, 155)
+    RED = (255, 0, 0)
+    VIOLET = (255, 51, 255)
+    WHITE = (255, 255, 255)
+    YELLOW = (255, 255, 0)
+
