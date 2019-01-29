@@ -21,8 +21,17 @@ import pygame
 from pygame.locals import *
 
 from shared import *
+import room
 
+# generate room
+walls = room.create_walls() # such that room has odd shape
 robovacs = []
+# create_dropoffs()
+# create_furniture()
+# create_dogs()
+# create_chargers()
+# create_robovacs()
+# create_dirt()
 
 
 def main():
@@ -32,25 +41,20 @@ def main():
     DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     BASIC_FONT = pygame.font.Font(SANS_FONT, 18)
     pygame.display.set_caption(ROBOVAC)
-    # generate_room()
-    while True:
-        run_game()
+    run_game()
 
 
-# def generate_room():
-    # create_walls() # such that room has odd shape
-    # create_dropoffs()
-    # create_furniture()
-    # create_dogs()
-    # create_chargers()
-    # create_robovacs()
-    # create_dirt()
-
+def check_for_quit():
+    for event in pygame.event.get():  # event handling loop
+        if event.type == QUIT:
+            terminate()
+        elif event.type == KEYDOWN and (event.key == K_q or event.key == K_ESCAPE):
+            terminate()
 
 def run_game():
-
     while True:  # main game loop
-
+        # check for q or Esc keypress or window close events to quit
+        check_for_quit()
         # robovacs decide
 
         # move robovacs
@@ -60,7 +64,7 @@ def run_game():
         # update display
         DISPLAY_SURF.fill(BG_COLOR.value)
         draw_grid()
-        # draw_walls()
+        draw_drawables(walls)
         # draw_dropoffs()
         # draw_furniture()
         # draw_dogs()

@@ -64,3 +64,6 @@ VACUUM_DRAIN = 2
 
 def get_random_location():
     return {X: random.randint(0, GRID_WIDTH - 1), Y: random.randint(0, GRID_HEIGHT - 1)}
+
+def get_random_block():
+    return {X: random.randint(0, 2), Y: random.randint(0, 2)}

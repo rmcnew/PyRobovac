@@ -16,11 +16,12 @@
 
 # wall class
 from drawable import Drawable
+from colors import Colors
 
 
 class Wall(Drawable):
-    def __init__(self, start_x, start_y, line_color, fill_color):
-        super().__init__(start_x, start_y, line_color, fill_color)
+    def __init__(self, start_x, start_y):
+        super().__init__(start_x, start_y, Colors.DARK_GRAY, Colors.DARK_GRAY)
 
 
 
