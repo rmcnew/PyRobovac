@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
 import sys
+import argparse
 
 import numpy
 import pygame
@@ -25,15 +25,20 @@ from shared import *
 from drawable import Drawable
 import room
 
+# setup command line argument parsing
+parser = argparse.ArgumentParser()
+parser.add_argument('-r', default=1, type=int, choices=range(1, 5), help='number of robovacs (1 to 4)')
+parser.add_argument('-d', default=1, type=int, choices=range(0, 5), help='number of dogs (0 to 4)')
+args = parser.parse_args()
+
 # create grid 
 grid = numpy.zeros((GRID_WIDTH, GRID_HEIGHT), numpy.int8)
 # generate room
 room.create_walls(grid) # such that room has odd shape
 room.create_dropoffs(grid)
 room.create_furniture(grid)
+robovacs = room.create_robovacs(grid, args.r)
 # create_dogs()
-# create_chargers()
-# create_robovacs()
 # create_dirt()
 
 

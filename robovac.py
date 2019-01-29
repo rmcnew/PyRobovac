@@ -16,7 +16,13 @@
 
 # robovac module
 from drawable import Drawable
-from shared import BATTERY_FULL
+from shared import *
 
-def think():
-    print "Thought"
+class Robovac:
+    def __init__(self, start_x, start_y, charger_x, charger_y, name):
+        self.x = start_x
+        self.y = start_y
+        self.charger_x = charger_x
+        self.charger_y = charger_y
+        self.name = name
+        self.direction = RIGHT

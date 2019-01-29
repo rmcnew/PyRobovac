@@ -18,6 +18,7 @@ from math import fabs
 
 from shared import *
 from drawable import Drawable
+from robovac import Robovac
 
 # room contains methods to create the elements that make up the simulated 
 # room where the robovacs operate
@@ -74,12 +75,14 @@ def fill_dropoff_block(grid):
                 grid[x][y] = Drawable.DROPOFF.value
     return clear
 
+
 # create the dropoffs
 def create_dropoffs(grid):
     dropoffs_left = DROPOFF_COUNT
     while dropoffs_left > 0:
         if fill_dropoff_block(grid):
             dropoffs_left = dropoffs_left - 1
+
 
 # fill a furniture block
 def fill_furniture_block(grid):
@@ -99,10 +102,32 @@ def fill_furniture_block(grid):
                 grid[x][y] = Drawable.FURNITURE.value
     return clear
 
+
 # create the furniture
 def create_furniture(grid):
     furniture_left = FURNITURE_COUNT
     while furniture_left > 0:
         if fill_furniture_block(grid):
             furniture_left = furniture_left - 1
+
+
+def is_clear(grid, x, y):
+    return x >= 0 and x <= GRID_WIDTH and y >= 0 and y <= GRID_HEIGHT and grid[x][y] == Drawable.CLEAN.value
+
+# create robovacs and chargers
+def create_robovacs(grid, count):
+    robovacs = []
+    robovac_index = 1
+    while robovac_index <= count:
+        charger_location = get_random_location()
+        charger_x = charger_location[X]
+        charger_y = charger_location[Y]
+        robovac_x = charger_x - 1
+        robovac_y = charger_y
+        if is_clear(grid, charger_x, charger_y) and is_clear(grid, robovac_x, robovac_y):
+            grid[charger_x][charger_y] = Drawable["CHARGER_" + str(robovac_index)].value
+            grid[robovac_x][robovac_y] = Drawable["ROBOVAC_" + str(robovac_index)].value
+            robovacs.append(Robovac(robovac_x, robovac_y, charger_x, charger_y, "ROBOVAC_" + str(robovac_index)))
+            robovac_index = robovac_index + 1
+    return robovacs
 
