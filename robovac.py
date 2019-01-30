@@ -16,6 +16,7 @@
 
 # robovac module
 from datetime import datetime
+import random
 
 from action import Action
 from a_star import find_path
@@ -41,9 +42,9 @@ class Robovac:
     def next_action_from_path(self, current_point, next_point):
         delta_x = next_point.x - current_point.x
         delta_y = next_point.y - current_point.y
-        next_dir = "turn_{}".format(Direction((delta_x, delta_y)).name.lower())
-        self.action_queue.append(next_dir)
-        self.action_queue.append("move_forward")
+        next_dir = "turn_{}".format(Direction((delta_x, delta_y)).name).upper()
+        self.action_queue.append(Action[next_dir])
+        self.action_queue.append(Action["MOVE_FORWARD"])
 
     def run(self, grid):  # take a turn
         # if there are pending actions do them first
@@ -82,7 +83,7 @@ class Robovac:
     def find_dirt(self, grid):
         if self.no_dirt_counter >= NO_DIRT_MAX:
             self.no_dirt_counter = 0
-            self.turn_right()
+            self.turn_random()
         else:
             self.no_dirt_counter = self.no_dirt_counter + 1
             self.move_forward(grid)
@@ -163,6 +164,14 @@ class Robovac:
             self.direction = Direction.NORTH
         elif self.direction is Direction.NORTHWEST:
             self.direction = Direction.NORTHEAST
+
+    def turn_random(self):
+        index = random.randint(0, 7)
+        current_index = 0
+        for dir in Direction:
+            if current_index == index:
+                getattr(self, "turn_{}".format(dir.name.lower()))()
+            current_index = current_index + 1
 
     def move_forward(self, grid):
         self.battery = self.battery - MOVE_DRAIN

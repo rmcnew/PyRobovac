@@ -144,7 +144,7 @@ def create_dirt(grid):
     dirt = []
     filth = []
     dirt_index = 1
-    dirt_count = DIRTY_MIN # TODO: make this semi-random
+    dirt_count = DIRTY_MIN  # TODO: make this semi-random
     while dirt_index <= dirt_count:
         dirt_location = get_random_location(grid)
         if is_clean(grid, dirt_location):
@@ -152,7 +152,7 @@ def create_dirt(grid):
             dirt.append(dirt_location)
             dirt_index = dirt_index + 1
     filth_index = 1
-    filth_count = FILTHY_MIN # TODO: make this semi-random
+    filth_count = FILTHY_MIN  # TODO: make this semi-random
     while filth_index <= filth_count:
         filth_location = get_random_location(grid)
         if is_clean(grid, filth_location):

@@ -29,4 +29,3 @@ class Action(Enum):
     TURN_RIGHT = "turn_right"
     MOVE_FORWARD = "move_forward"
     MOVE_BACKWARD = "move_backward"
-    VACUUM = "vacuum"

@@ -77,7 +77,7 @@ DIRTY_MIN = 400
 FILTHY_MIN = 120
 
 # dirt seeking
-NO_DIRT_MAX = 7
+NO_DIRT_MAX = 11
 
 
 def get_random_location(grid):
