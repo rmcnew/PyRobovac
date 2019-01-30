@@ -111,9 +111,6 @@ def create_furniture(grid):
             furniture_left = furniture_left - 1
 
 
-def is_clear(grid, x, y):
-    return x >= 0 and x <= GRID_WIDTH and y >= 0 and y <= GRID_HEIGHT and grid[x][y] == Drawable.CLEAN.value
-
 # create robovacs and chargers
 def create_robovacs(grid, count):
     robovacs = []
@@ -124,7 +121,7 @@ def create_robovacs(grid, count):
         charger_y = charger_location[Y]
         robovac_x = charger_x - 1
         robovac_y = charger_y
-        if is_clear(grid, charger_x, charger_y) and is_clear(grid, robovac_x, robovac_y):
+        if is_clean(grid, charger_x, charger_y) and is_clean(grid, robovac_x, robovac_y):
             grid[charger_x][charger_y] = Drawable["CHARGER_" + str(robovac_index)].value
             grid[robovac_x][robovac_y] = Drawable["ROBOVAC_" + str(robovac_index)].value
             robovacs.append(Robovac(robovac_x, robovac_y, charger_x, charger_y, "ROBOVAC_" + str(robovac_index)))

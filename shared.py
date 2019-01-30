@@ -18,6 +18,7 @@
 # shared constants and functions
 import random
 from colors import Colors
+from drawable import Drawable
 
 # frames per second
 FPS = 15
@@ -56,7 +57,8 @@ RIGHT = 'right'
 VACUUM_CLEAN = 1
 
 # robovac battery
-BATTERY_FULL = 300
+BATTERY_FULL = 1000
+BATTERY_LOW = 300
 MOVE_DRAIN = 1
 VACUUM_DRAIN = 2
 
@@ -68,11 +70,40 @@ DROPOFF_COUNT = 3
 FURNITURE_SIZE = 4
 FURNITURE_COUNT = 7 
 
+# score
+DIRTY_CLEANED_SCORE = 10
+FILTHY_CLEANED_SCORE = 20
+DIRTY_MISSED_SCORE = -1
+FILTHY_MISSED_SCORE = -2
+SECONDS_PER_MINUTE = 60
+
+# robovac actions
+TURN_LEFT = "turn_left"
+TURN_RIGHT = "turn_right"
+MOVE_FORWARD = "move_forward"
+MOVE_BACKWARD = "move_backward"
+VACUUM = "vacuum"
+
 def get_random_location():
     return {X: random.randint(0, GRID_WIDTH - 1), Y: random.randint(0, GRID_HEIGHT - 1)}
 
 def get_random_block():
     return {X: random.randint(0, 2), Y: random.randint(0, 2)}
+
+def on_grid(x, y):
+    return x >= 0 and x <= GRID_WIDTH and y >= 0 and y <= GRID_HEIGHT 
+
+def is_clean(grid, x, y):
+    return on_grid(x, y) and grid[x][y] == Drawable.CLEAN.value
+
+def is_dirty(grid, x, y):
+    return on_grid(x, y) and grid[x][y] == Drawable.DIRTY.value
+
+def is_filthy(grid, x, y):
+    return on_grid(x, y) and grid[x][y] == Drawable.FILTHY.value
+
+def can_enter(grid, x, y):
+    return is_clean(grid, x, y) or is_dirty(grid, x, y) or is_filthy(grid, x, y)
 
 def min(a, b):
     if a < b:

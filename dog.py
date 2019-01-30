@@ -15,6 +15,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # dog module
+from shared import *
 
-def bark():
-    print "Woof"
+class Dog:
+    def __init__(self, start_x, start_y, name):
+        self.x = start_x
+        self.y = start_y
+        self.name = name
+
