@@ -38,8 +38,8 @@ room.create_walls(grid) # such that room has odd shape
 room.create_dropoffs(grid)
 room.create_furniture(grid)
 robovacs = room.create_robovacs(grid, args.r)
-# create_dogs()
-# create_dirt()
+dogs = room.create_dogs(grid, args.d)
+(dirt, filth) = room.create_dirt(grid)
 
 
 def main():

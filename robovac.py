@@ -17,6 +17,7 @@
 # robovac module
 from datetime import datetime, timedelta
 from shared import *
+from drawable import Drawable
 
 class Robovac:
     def __init__(self, start_x, start_y, charger_x, charger_y, name):
@@ -167,9 +168,9 @@ class Robovac:
 
     def vacuum(self):
         self.battery = self.battery - VACUUM_DRAIN
-        if self.cell_below = Drawable.FILTHY.value:
+        if self.cell_below == Drawable.FILTHY.value:
             self.cell_below = Drawable.DIRTY.value
             self.filthy_cleaned = self.filthy_cleaned + 1
-        elif self.cell_below = Drawable.DIRTY.value:
+        elif self.cell_below == Drawable.DIRTY.value:
             self.cell_below = Drawable.CLEAN.value
             self.dirty_cleaned = self.dirty_cleaned + 1

@@ -84,6 +84,10 @@ MOVE_FORWARD = "move_forward"
 MOVE_BACKWARD = "move_backward"
 VACUUM = "vacuum"
 
+# dirt
+DIRTY_MIN = 1000
+FILTHY_MIN = 300
+
 def get_random_location():
     return {X: random.randint(0, GRID_WIDTH - 1), Y: random.randint(0, GRID_HEIGHT - 1)}
 

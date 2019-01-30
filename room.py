@@ -19,6 +19,7 @@ from math import fabs
 from shared import *
 from drawable import Drawable
 from robovac import Robovac
+from dog import Dog
 
 # room contains methods to create the elements that make up the simulated 
 # room where the robovacs operate
@@ -128,3 +129,42 @@ def create_robovacs(grid, count):
             robovac_index = robovac_index + 1
     return robovacs
 
+
+def create_dogs(grid, count):
+    dogs = []
+    dog_index = 1
+    while dog_index <= count:
+        dog_location = get_random_location()
+        dog_x = dog_location[X]
+        dog_y = dog_location[Y]
+        if is_clean(grid, dog_x, dog_y):
+            grid[dog_x][dog_y] = Drawable["DOG_" + str(dog_index)].value
+            dogs.append(Dog(dog_x, dog_y, "DOG_" + str(dog_index)))
+            dog_index = dog_index + 1
+    return dogs
+
+
+def create_dirt(grid):
+    dirt = []
+    filth = []
+    dirt_index = 1
+    dirt_count = DIRTY_MIN # TODO: make this semi-random
+    while dirt_index <= dirt_count:
+        dirt_location = get_random_location()
+        dirt_x = dirt_location[X]
+        dirt_y = dirt_location[Y]
+        if is_clean(grid, dirt_x, dirt_y):
+            grid[dirt_x][dirt_y] = Drawable["DIRTY"].value
+            dirt.append({X:dirt_x, Y:dirt_y})
+            dirt_index = dirt_index + 1
+    filth_index = 1
+    filth_count = FILTHY_MIN # TODO: make this semi-random
+    while filth_index <= filth_count:
+        filth_location = get_random_location()
+        filth_x = filth_location[X]
+        filth_y = filth_location[Y]
+        if is_clean(grid, filth_x, filth_y):
+            grid[filth_x][filth_y] = Drawable["FILTHY"].value
+            filth.append({X:filth_x, Y:filth_y})
+            filth_index = filth_index + 1
+    return (dirt, filth)
