@@ -24,56 +24,57 @@ from dog import Dog
 # room contains methods to create the elements that make up the simulated 
 # room where the robovacs operate
 
+
 # fill a wall block
 def fill_wall_block(block, grid):
-    start_x = block[X] * int(GRID_WIDTH / 3)
-    stop_x = (block[X] + 1) * int(GRID_WIDTH / 3)
-    start_y = block[Y] * int(GRID_HEIGHT / 3)
-    stop_y = (block[Y] + 1) * int(GRID_HEIGHT / 3)
+    start_x = block.x * int(grid.width / 3)
+    stop_x = (block.x + 1) * int(grid.width / 3)
+    start_y = block.y * int(grid.height / 3)
+    stop_y = (block.y + 1) * int(grid.height / 3)
     for x in range(start_x, stop_x):
         for y in range(start_y, stop_y):
-            grid[x][y] = Drawable.WALL.value
+            grid.array[x][y] = Drawable.WALL.value
 
 
 # create the walls
 def create_walls(grid):
     # create a border wall so robovacs stay inside the window
-    for x in range(0, GRID_WIDTH):
-        grid[x][1] = Drawable.WALL.value
-        grid[x][GRID_HEIGHT - 1] = Drawable.WALL.value
-    for y in range(0, GRID_HEIGHT):
-        grid[0][y] = Drawable.WALL.value
-        grid[GRID_WIDTH - 1][y] = Drawable.WALL.value
+    for x in range(0, grid.width):
+        grid.array[x][1] = Drawable.WALL.value
+        grid.array[x][grid.height - 1] = Drawable.WALL.value
+    for y in range(0, grid.height):
+        grid.array[0][y] = Drawable.WALL.value
+        grid.array[grid.width - 1][y] = Drawable.WALL.value
     # randomly generate some wall sections to give the room an unusual shape:
     # 1) divide the room into a 3 x 3 grid
     # 2) randomly choose two blocks and fill them with wall
     first_block = get_random_block()
-    #print("first block: {}".format(first_block))
+    # print("first block: {}".format(first_block))
     second_block = get_random_block()
-    while (first_block[X] == second_block[X] and first_block[Y] == second_block[Y]) or \
-            (fabs(first_block[X] - second_block[X]) == 1 and fabs(first_block[Y] - second_block[Y]) == 1):
+    while (first_block.x == second_block.x and first_block.y == second_block.y) or \
+            (fabs(first_block.x - second_block.x) == 1 and fabs(first_block.y - second_block.y) == 1):
         second_block = get_random_block()
-    #print("second_block: {}".format(second_block))
+    # print("second_block: {}".format(second_block))
     fill_wall_block(first_block, grid)
     fill_wall_block(second_block, grid)
 
 
 # fill a dropoff block
 def fill_dropoff_block(grid):
-    block = get_random_location()
-    start_x = block[X]
-    start_y = block[Y]
-    stop_x = min(block[X] + DROPOFF_SIZE, GRID_WIDTH)
-    stop_y = min(block[Y] + DROPOFF_SIZE, GRID_HEIGHT)
+    block = get_random_location(grid)
+    start_x = block.x
+    start_y = block.y
+    stop_x = min(block.x + DROPOFF_SIZE, grid.width)
+    stop_y = min(block.y + DROPOFF_SIZE, grid.height)
     clear = True
     for x in range(start_x, stop_x):
         for y in range(start_y, stop_y):
-            if x <= GRID_WIDTH and y <= GRID_HEIGHT and grid[x][y] != Drawable.CLEAN.value:
+            if x <= grid.width and y <= grid.height and grid.array[x][y] != Drawable.CLEAN.value:
                 clear = False
-    if x <= GRID_WIDTH and y <= GRID_HEIGHT and clear:
+    if clear:
         for x in range(start_x, stop_x):
             for y in range(start_y, stop_y):
-                grid[x][y] = Drawable.DROPOFF.value
+                grid.array[x][y] = Drawable.DROPOFF.value
     return clear
 
 
@@ -87,20 +88,20 @@ def create_dropoffs(grid):
 
 # fill a furniture block
 def fill_furniture_block(grid):
-    block = get_random_location()
-    start_x = block[X]
-    start_y = block[Y]
-    stop_x = min(block[X] + FURNITURE_SIZE, GRID_WIDTH)
-    stop_y = min(block[Y] + FURNITURE_SIZE, GRID_HEIGHT)
+    block = get_random_location(grid)
+    start_x = block.x
+    start_y = block.y
+    stop_x = min(block.x + FURNITURE_SIZE, grid.width)
+    stop_y = min(block.y + FURNITURE_SIZE, grid.height)
     clear = True
     for x in range(start_x, stop_x):
         for y in range(start_y, stop_y):
-            if x <= GRID_WIDTH and y <= GRID_HEIGHT and grid[x][y] != Drawable.CLEAN.value:
+            if x <= grid.width and y <= grid.height and grid.array[x][y] != Drawable.CLEAN.value:
                 clear = False
-    if x <= GRID_WIDTH and y <= GRID_HEIGHT and clear:
+    if clear:
         for x in range(start_x, stop_x):
             for y in range(start_y, stop_y):
-                grid[x][y] = Drawable.FURNITURE.value
+                grid.array[x][y] = Drawable.FURNITURE.value
     return clear
 
 
@@ -117,15 +118,12 @@ def create_robovacs(grid, count):
     robovacs = []
     robovac_index = 1
     while robovac_index <= count:
-        charger_location = get_random_location()
-        charger_x = charger_location[X]
-        charger_y = charger_location[Y]
-        robovac_x = charger_x - 1
-        robovac_y = charger_y
-        if is_clean(grid, charger_x, charger_y) and is_clean(grid, robovac_x, robovac_y):
-            grid[charger_x][charger_y] = Drawable["CHARGER_" + str(robovac_index)].value
-            grid[robovac_x][robovac_y] = Drawable["ROBOVAC_" + str(robovac_index)].value
-            robovacs.append(Robovac(robovac_x, robovac_y, charger_x, charger_y, "ROBOVAC_" + str(robovac_index)))
+        charger_location = get_random_location(grid)
+        robovac_location = Point(charger_location.x - 1, charger_location.y)
+        if is_clean(grid, charger_location) and is_clean(grid, robovac_location):
+            grid[charger_location] = Drawable["CHARGER_" + str(robovac_index)]
+            grid[robovac_location] = Drawable["ROBOVAC_" + str(robovac_index)]
+            robovacs.append(Robovac(robovac_location, charger_location, "ROBOVAC_" + str(robovac_index)))
             robovac_index = robovac_index + 1
     return robovacs
 
@@ -134,12 +132,10 @@ def create_dogs(grid, count):
     dogs = []
     dog_index = 1
     while dog_index <= count:
-        dog_location = get_random_location()
-        dog_x = dog_location[X]
-        dog_y = dog_location[Y]
-        if is_clean(grid, dog_x, dog_y):
-            grid[dog_x][dog_y] = Drawable["DOG_" + str(dog_index)].value
-            dogs.append(Dog(dog_x, dog_y, "DOG_" + str(dog_index)))
+        dog_location = get_random_location(grid)
+        if is_clean(grid, dog_location):
+            grid[dog_location] = Drawable["DOG_" + str(dog_index)]
+            dogs.append(Dog(dog_location, "DOG_" + str(dog_index)))
             dog_index = dog_index + 1
     return dogs
 
@@ -150,21 +146,17 @@ def create_dirt(grid):
     dirt_index = 1
     dirt_count = DIRTY_MIN # TODO: make this semi-random
     while dirt_index <= dirt_count:
-        dirt_location = get_random_location()
-        dirt_x = dirt_location[X]
-        dirt_y = dirt_location[Y]
-        if is_clean(grid, dirt_x, dirt_y):
-            grid[dirt_x][dirt_y] = Drawable["DIRTY"].value
-            dirt.append({X:dirt_x, Y:dirt_y})
+        dirt_location = get_random_location(grid)
+        if is_clean(grid, dirt_location):
+            grid[dirt_location] = Drawable["DIRTY"]
+            dirt.append(dirt_location)
             dirt_index = dirt_index + 1
     filth_index = 1
     filth_count = FILTHY_MIN # TODO: make this semi-random
     while filth_index <= filth_count:
-        filth_location = get_random_location()
-        filth_x = filth_location[X]
-        filth_y = filth_location[Y]
-        if is_clean(grid, filth_x, filth_y):
-            grid[filth_x][filth_y] = Drawable["FILTHY"].value
-            filth.append({X:filth_x, Y:filth_y})
+        filth_location = get_random_location(grid)
+        if is_clean(grid, filth_location):
+            grid[filth_location] = Drawable["FILTHY"]
+            filth.append(filth_location)
             filth_index = filth_index + 1
-    return (dirt, filth)
+    return dirt, filth

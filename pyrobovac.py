@@ -14,16 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import sys
 import argparse
+import sys
 
-import numpy
 import pygame
 from pygame.locals import *
 
-from shared import *
-from drawable import Drawable
 import room
+from grid import Grid
 from a_star import *
 
 # setup command line argument parsing
@@ -32,8 +30,9 @@ parser.add_argument('-r', default=1, type=int, choices=range(1, 5), help='number
 parser.add_argument('-d', default=1, type=int, choices=range(0, 5), help='number of dogs (0 to 4)')
 args = parser.parse_args()
 
-# create grid 
-grid = numpy.zeros((GRID_WIDTH, GRID_HEIGHT), numpy.int8)
+# create grid
+grid = Grid()
+
 # generate room
 room.create_walls(grid) # such that room has odd shape
 room.create_dropoffs(grid)
@@ -60,6 +59,7 @@ def check_for_quit():
             terminate()
         elif event.type == KEYDOWN and (event.key == K_q or event.key == K_ESCAPE):
             terminate()
+
 
 def run_game():
     while True:  # main game loop
@@ -91,16 +91,17 @@ def draw_grid():
     for y in range(0, WINDOW_HEIGHT, CELL_SIZE):  # draw horizontal lines
         pygame.draw.line(DISPLAY_SURF, Colors.DARK_GRAY.value, (0, y), (WINDOW_WIDTH, y))
     # draw grid objects
-    for x in range(0, GRID_WIDTH):
-        for y in range(0, GRID_HEIGHT):
-            if grid[x][y] != 0:
-                (lineColor, fillColor) = Drawable(grid[x][y]).color
+    for x in range(0, grid.width):
+        for y in range(0, grid.height):
+            if grid.array[x][y] != 0:  # use the internal array directly for speed
+                (lineColor, fillColor) = Drawable(grid.array[x][y]).color
                 cell_x = x * CELL_SIZE
                 cell_y = y * CELL_SIZE
                 rect = pygame.Rect(cell_x, cell_y, CELL_SIZE, CELL_SIZE)
                 pygame.draw.rect(DISPLAY_SURF, lineColor.value, rect)
                 inner_rect = pygame.Rect(cell_x + 4, cell_y + 4, CELL_SIZE - 8, CELL_SIZE - 8)
                 pygame.draw.rect(DISPLAY_SURF, fillColor.value, inner_rect)
+
 
 if __name__ == '__main__':
     main()

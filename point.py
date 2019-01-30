@@ -14,11 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# dog module
 
+class Point:
+    """Represents a point on the grid"""
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
-class Dog:
-    def __init__(self, start_location, name):
-        self.location = start_location
-        self.name = name
+    def __str__(self):
+        return "Point({}, {})".format(self.x, self.y)
 
+    def __repr__(self):
+        return "Point({}, {})".format(self.x, self.y)
+
+    def plus(self, direction):
+        return Point(self.x + direction.value[0], self.y + direction.value[1])
+
+    def minus(self, direction):
+        return Point(self.x - direction.value[0], self.y - direction.value[1])

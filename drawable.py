@@ -17,10 +17,8 @@
 # drawable, a base class for drawable point objects
 
 from enum import Enum
-from shared import *
+
 from colors import Colors
-import pygame
-from pygame.locals import *
 
 
 class Drawable(Enum):
@@ -46,39 +44,39 @@ class Drawable(Enum):
     @property
     def color(self):
         if self.value == 0:
-            return (Colors.BLACK, Colors.BLACK)
+            return Colors.BLACK, Colors.BLACK
         elif self.value == 1:
-            return (Colors.DARK_GRAY, Colors.DARK_GRAY)
+            return Colors.DARK_GRAY, Colors.DARK_GRAY
         elif self.value == 2:
-            return (Colors.WHITE, Colors.WHITE)
+            return Colors.WHITE, Colors.WHITE
         elif self.value == 3:
-            return (Colors.PINK, Colors.PINK) 
+            return Colors.PINK, Colors.PINK
         elif self.value == 4:
-            return (Colors.YELLOW, Colors.YELLOW)
+            return Colors.YELLOW, Colors.YELLOW
         elif self.value == 5:
-            return (Colors.DARK_YELLOW, Colors.DARK_YELLOW)
+            return Colors.DARK_YELLOW, Colors.DARK_YELLOW
         elif self.value == 6:
-            return (Colors.PALE_YELLOW, Colors.PALE_YELLOW)
+            return Colors.PALE_YELLOW, Colors.PALE_YELLOW
         elif self.value == 7:
-            return (Colors.DARKER_YELLOW, Colors.DARKER_YELLOW)
+            return Colors.DARKER_YELLOW, Colors.DARKER_YELLOW
         elif self.value == 8:
-            return (Colors.DARK_RED, Colors.DARK_RED)
+            return Colors.DARK_RED, Colors.DARK_RED
         elif self.value == 9:
-            return (Colors.DARK_GREEN, Colors.DARK_GREEN)
+            return Colors.DARK_GREEN, Colors.DARK_GREEN
         elif self.value == 10:
-            return (Colors.DARK_BLUE, Colors.DARK_BLUE)
+            return Colors.DARK_BLUE, Colors.DARK_BLUE
         elif self.value == 11:
-            return (Colors.DARK_VIOLET, Colors.DARK_VIOLET)
+            return Colors.DARK_VIOLET, Colors.DARK_VIOLET
         elif self.value == 12:
-            return (Colors.RED, Colors.RED)
+            return Colors.RED, Colors.RED
         elif self.value == 13:
-            return (Colors.GREEN, Colors.GREEN)
+            return Colors.GREEN, Colors.GREEN
         elif self.value == 14:
-            return (Colors.BLUE, Colors.BLUE)
+            return Colors.BLUE, Colors.BLUE
         elif self.value == 15:
-            return (Colors.VIOLET, Colors.VIOLET)
+            return Colors.VIOLET, Colors.VIOLET
         elif self.value == 16:
-            return (Colors.BROWN, Colors.BROWN)
+            return Colors.BROWN, Colors.BROWN
         elif self.value == 17:
-            return (Colors.DARK_BROWN, Colors.DARK_BROWN)
+            return Colors.DARK_BROWN, Colors.DARK_BROWN
 

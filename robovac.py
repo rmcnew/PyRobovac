@@ -15,24 +15,24 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # robovac module
-from datetime import datetime, timedelta
+from datetime import datetime
+
+from direction import Direction
 from shared import *
-from drawable import Drawable
+
 
 class Robovac:
-    def __init__(self, start_x, start_y, charger_x, charger_y, name):
-        self.x = start_x
-        self.y = start_y
-        self.charger_x = charger_x
-        self.charger_y = charger_y
-        self.name = name
-        self.direction = RIGHT
+    def __init__(self, start_location, charger_location, name):
+        self.location = start_location
+        self.charger_location = charger_location
+        self.name = Drawable[name]
+        self.direction = Direction.EAST
         self.battery = BATTERY_FULL
         self.dirty_cleaned = 0
         self.filthy_cleaned = 0
         self.start_time = datetime.now()
         self.action_queue = []
-        self.cell_below = Drawable.CLEAN.value
+        self.cell_below = Drawable.CLEAN
 
     def score(self, dirty_left, filthy_left):
         elapsed_minutes = (datetime.now() - self.start_time).seconds / SECONDS_PER_MINUTE
@@ -41,130 +41,71 @@ class Robovac:
         penalty = (dirty_left * DIRTY_MISSED_SCORE) + (filthy_left * FILTHY_MISSED_SCORE)
         return weighted_points + penalty
 
-    def turn_left(self):
+    def turn_north(self):
         self.battery = self.battery - MOVE_DRAIN
-        if self.direction == UP:
-            self.direction = LEFT
-        elif self.direction == LEFT:
-            self.direction = DOWN
-        elif self.direction == DOWN:
-            self.direction = RIGHT
-        elif self.direction == RIGHT:
-            self.direction = UP
+        self.direction = Direction.NORTH
 
-    def turn_right(self):
+    def turn_northeast(self):
         self.battery = self.battery - MOVE_DRAIN
-        if self.direction == UP:
-            self.direction = RIGHT
-        elif self.direction == LEFT:
-            self.direction = UP
-        elif self.direction == DOWN:
-            self.direction = LEFT
-        elif self.direction == RIGHT:
-            self.direction = DOWN
+        self.direction = Direction.NORTHEAST
+
+    def turn_east(self):
+        self.battery = self.battery - MOVE_DRAIN
+        self.direction = Direction.EAST
+
+    def turn_southeast(self):
+        self.battery = self.battery - MOVE_DRAIN
+        self.direction = Direction.SOUTHEAST
+
+    def turn_south(self):
+        self.battery = self.battery - MOVE_DRAIN
+        self.direction = Direction.SOUTH
+
+    def turn_southwest(self):
+        self.battery = self.battery - MOVE_DRAIN
+        self.direction = Direction.SOUTHWEST
+
+    def turn_west(self):
+        self.battery = self.battery - MOVE_DRAIN
+        self.direction = Direction.WEST
+
+    def turn_northwest(self):
+        self.battery = self.battery - MOVE_DRAIN
+        self.direction = Direction.NORTHWEST
 
     def move_forward(self, grid):
         self.battery = self.battery - MOVE_DRAIN
-        if self.direction == UP:
-            if can_enter(grid, self.x, self.y + 1): # move up
-                # update the grid for cell below
-                previous_cell_below = self.cell_below
-                self.cell_below = grid[self.x][self.y + 1] 
-                grid[self.x][self.y + 1] = Drawable[self.name].value
-                grid[self.x][self.y] = previous_cell_below
-                # update internal position
-                self.y = self.y + 1
-            else: # cannot move up, back off and change direction
-                self.action_queue.insert(0, TURN_LEFT)
-            
-        elif self.direction == LEFT:
-            if can_enter(grid, self.x - 1, self.y): # move left
-                # update the grid for cell below
-                previous_cell_below = self.cell_below
-                self.cell_below = grid[self.x - 1][self.y] 
-                grid[self.x - 1][self.y] = Drawable[self.name].value
-                grid[self.x][self.y] = previous_cell_below
-                # update internal position
-                self.x = self.x - 1
-            else: # cannot move up, back off and change direction
-                self.action_queue.insert(0, TURN_LEFT)
-            
-        elif self.direction == DOWN:
-            if can_enter(grid, self.x, self.y - 1): # move down
-                # update the grid for cell below
-                previous_cell_below = self.cell_below
-                self.cell_below = grid[self.x][self.y - 1] 
-                grid[self.x][self.y - 1] = Drawable[self.name].value
-                grid[self.x][self.y] = previous_cell_below
-                # update internal position
-                self.y = self.y - 1
-            else: # cannot move up, back off and change direction
-                self.action_queue.insert(0, TURN_LEFT)
-            
-        elif self.direction == RIGHT:
-            if can_enter(grid, self.x + 1, self.y): # move right
-                # update the grid for cell below
-                previous_cell_below = self.cell_below
-                self.cell_below = grid[self.x + 1][self.y] 
-                grid[self.x + 1][self.y] = Drawable[self.name].value
-                grid[self.x][self.y] = previous_cell_below
-                # update internal position
-                self.x = self.x + 1
-            else: # cannot move up, back off and change direction
-                self.action_queue.insert(0, TURN_LEFT)
-            
-        
+        next_location = self.location.plus(self.direction)
+        if can_enter(grid, next_location):
+            # save the cell below for the next location
+            next_cell_below = grid[next_location]
+            # put the current cell below back on the grid
+            grid[self.location] = self.cell_below
+            # update the grid for the robovac's next location
+            grid[next_location] = self.name
+            # set the cell below to the next location
+            self.cell_below = next_cell_below
+            # update internal location
+            self.location = next_location
+        else:  # cannot move up, back off and change direction
+            self.action_queue.insert(0, TURN_LEFT)
 
     def move_backward(self, grid):
         self.battery = self.battery - MOVE_DRAIN
-        if self.direction == DOWN:
-            if can_enter(grid, self.x, self.y + 1): # move up
-                # update the grid for cell below
-                previous_cell_below = self.cell_below
-                self.cell_below = grid[self.x][self.y + 1] 
-                grid[self.x][self.y + 1] = Drawable[self.name].value
-                grid[self.x][self.y] = previous_cell_below
-                # update internal position
-                self.y = self.y + 1
-            else: # cannot move up, back off and change direction
-                self.action_queue.insert(0, TURN_LEFT)
-            
-        elif self.direction == RIGHT:
-            if can_enter(grid, self.x - 1, self.y): # move left
-                # update the grid for cell below
-                previous_cell_below = self.cell_below
-                self.cell_below = grid[self.x - 1][self.y] 
-                grid[self.x - 1][self.y] = Drawable[self.name].value
-                grid[self.x][self.y] = previous_cell_below
-                # update internal position
-                self.x = self.x - 1
-            else: # cannot move up, back off and change direction
-                self.action_queue.insert(0, TURN_LEFT)
-            
-        elif self.direction == UP:
-            if can_enter(grid, self.x, self.y - 1): # move down
-                # update the grid for cell below
-                previous_cell_below = self.cell_below
-                self.cell_below = grid[self.x][self.y - 1] 
-                grid[self.x][self.y - 1] = Drawable[self.name].value
-                grid[self.x][self.y] = previous_cell_below
-                # update internal position
-                self.y = self.y - 1
-            else: # cannot move up, back off and change direction
-                self.action_queue.insert(0, TURN_LEFT)
-            
-        elif self.direction == LEFT:
-            if can_enter(grid, self.x + 1, self.y): # move right
-                # update the grid for cell below
-                previous_cell_below = self.cell_below
-                self.cell_below = grid[self.x + 1][self.y] 
-                grid[self.x + 1][self.y] = Drawable[self.name].value
-                grid[self.x][self.y] = previous_cell_below
-                # update internal position
-                self.x = self.x + 1
-            else: # cannot move up, back off and change direction
-                self.action_queue.insert(0, TURN_LEFT)
-
+        next_location = self.location.minus(self.direction)
+        if can_enter(grid, next_location):
+            # save the cell below for the next location
+            next_cell_below = grid[next_location]
+            # put the current cell below back on the grid
+            grid[self.location] = self.cell_below
+            # update the grid for the robovac's next location
+            grid[next_location] = self.name
+            # set the cell below to the next location
+            self.cell_below = next_cell_below
+            # update internal location
+            self.location = next_location
+        else:  # cannot move up, back off and change direction
+            self.action_queue.insert(0, TURN_LEFT)
 
     def vacuum(self):
         self.battery = self.battery - VACUUM_DRAIN

@@ -13,12 +13,20 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import numpy
+from shared import WINDOW_HEIGHT, WINDOW_WIDTH, CELL_SIZE
+from drawable import Drawable
 
-# dog module
 
+class Grid:
+    def __init__(self):
+        self.width = int(WINDOW_WIDTH / CELL_SIZE)
+        self.height = int(WINDOW_HEIGHT / CELL_SIZE)
+        # create grid
+        self.array = numpy.zeros((self.width, self.height), numpy.int8)
 
-class Dog:
-    def __init__(self, start_location, name):
-        self.location = start_location
-        self.name = name
+    def __getitem__(self, item):  # item must be a Point
+        return Drawable(self.array[item.x][item.y])
 
+    def __setitem__(self, key, value):  # key must be a Point, value must be a Drawable
+        self.array[key.x][key.y] = value.value

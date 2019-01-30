@@ -20,9 +20,11 @@ from heapq import *
 import json
 from shared import *
 
+
 # shared constants and functions
 def manhattan_distance(x1, y1, x2, y2):
     return fabs(x1 - x2) + fabs(y1 - y2)
+
 
 START = None
 
@@ -47,6 +49,7 @@ def extract_path(closed_list, to_x, to_y):
     while node.parent_x != START:
         path.insert(0, {X: node.x, Y: node.y})
         node = closed_list[json.dumps({X: node.parent_x, Y: node.parent_y})]
+    return path
     
 
 # use A* algorithm to find a path 

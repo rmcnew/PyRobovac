@@ -21,6 +21,8 @@ from colors import Colors
 from drawable import Drawable
 
 # frames per second
+from point import Point
+
 FPS = 15
 
 # game window
@@ -31,8 +33,6 @@ WINDOW_HEIGHT = 960
 CELL_SIZE = 10
 assert WINDOW_WIDTH % CELL_SIZE == 0, "Window width must be a multiple of cell size."
 assert WINDOW_HEIGHT % CELL_SIZE == 0, "Window height must be a multiple of cell size."
-GRID_WIDTH = int(WINDOW_WIDTH / CELL_SIZE)
-GRID_HEIGHT = int(WINDOW_HEIGHT / CELL_SIZE)
 
 # background color
 BG_COLOR = Colors.BLACK
@@ -46,12 +46,6 @@ SANS_FONT = 'freesansbold.ttf'
 # coordinates
 X = 'x'
 Y = 'y'
-
-# cardinal directions
-UP = 'up'
-DOWN = 'down'
-LEFT = 'left'
-RIGHT = 'right'
 
 # robovac vacuum
 VACUUM_CLEAN = 1
@@ -88,36 +82,33 @@ VACUUM = "vacuum"
 DIRTY_MIN = 1000
 FILTHY_MIN = 300
 
-def get_random_location():
-    return {X: random.randint(0, GRID_WIDTH - 1), Y: random.randint(0, GRID_HEIGHT - 1)}
+
+def get_random_location(grid):
+    return Point(random.randint(0, grid.width - 1), random.randint(0, grid.height - 1))
+
 
 def get_random_block():
-    return {X: random.randint(0, 2), Y: random.randint(0, 2)}
+    return Point(random.randint(0, 2), random.randint(0, 2))
 
-def on_grid(x, y):
-    return x >= 0 and x <= GRID_WIDTH and y >= 0 and y <= GRID_HEIGHT 
 
-def is_clean(grid, x, y):
-    return on_grid(x, y) and grid[x][y] == Drawable.CLEAN.value
+def on_grid(grid, point):
+    return 0 <= point.x <= grid.width and 0 <= point.y <= grid.height
 
-def is_dirty(grid, x, y):
-    return on_grid(x, y) and grid[x][y] == Drawable.DIRTY.value
 
-def is_filthy(grid, x, y):
-    return on_grid(x, y) and grid[x][y] == Drawable.FILTHY.value
+def is_clean(grid, point):
+    return on_grid(grid, point) and grid.array[point.x][point.y] == Drawable.CLEAN.value
 
-def can_enter(grid, x, y):
-    return is_clean(grid, x, y) or is_dirty(grid, x, y) or is_filthy(grid, x, y)
 
-def min(a, b):
-    if a < b:
-        return a
-    else:
-        return b
+def is_dirty(grid, point):
+    return on_grid(grid, point) and grid.array[point.x][point.y] == Drawable.DIRTY.value
 
-def max(a, b):
-    if a > b:
-        return a
-    else:
-        return b
 
+def is_filthy(grid, point):
+    return on_grid(grid, point) and grid.array[point.x][point.y] == Drawable.FILTHY.value
+
+
+def can_enter(grid, point):
+    return on_grid(grid, point) and \
+           (grid[point.x][point.y] == Drawable.CLEAN.value or
+            grid[point.x][point.y] == Drawable.DIRTY.value or
+            grid[point.x][point.y] == Drawable.FILTHY.value)
