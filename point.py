@@ -27,6 +27,9 @@ class Point:
     def __repr__(self):
         return "Point({}, {})".format(self.x, self.y)
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
     def plus(self, direction):
         return Point(self.x + direction.value[0], self.y + direction.value[1])
 

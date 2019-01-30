@@ -23,14 +23,14 @@ from drawable import Drawable
 # frames per second
 from point import Point
 
-FPS = 15
+FPS = 30
 
 # game window
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 960
 
 # cell size and game grid
-CELL_SIZE = 10
+CELL_SIZE = 20
 assert WINDOW_WIDTH % CELL_SIZE == 0, "Window width must be a multiple of cell size."
 assert WINDOW_HEIGHT % CELL_SIZE == 0, "Window height must be a multiple of cell size."
 
@@ -55,6 +55,7 @@ BATTERY_FULL = 1000
 BATTERY_LOW = 300
 MOVE_DRAIN = 1
 VACUUM_DRAIN = 2
+BATTERY_CHARGE = 50
 
 # dropoff
 DROPOFF_SIZE = 3
@@ -72,8 +73,11 @@ FILTHY_MISSED_SCORE = -2
 SECONDS_PER_MINUTE = 60
 
 # dirt
-DIRTY_MIN = 1000
-FILTHY_MIN = 300
+DIRTY_MIN = 400
+FILTHY_MIN = 120
+
+# dirt seeking
+NO_DIRT_MAX = 7
 
 
 def get_random_location(grid):

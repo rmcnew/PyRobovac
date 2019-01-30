@@ -18,6 +18,7 @@
 from datetime import datetime
 
 from action import Action
+from a_star import find_path
 from direction import Direction
 from shared import *
 
@@ -25,6 +26,7 @@ from shared import *
 class Robovac:
     def __init__(self, start_location, charger_location, name):
         self.location = start_location
+        self.charger_port = start_location
         self.charger_location = charger_location
         self.name = Drawable[name]
         self.direction = Direction.EAST
@@ -33,19 +35,57 @@ class Robovac:
         self.filthy_cleaned = 0
         self.start_time = datetime.now()
         self.action_queue = []
+        self.path = []
+        self.no_dirt_counter = 0
+
+    def next_action_from_path(self, current_point, next_point):
+        delta_x = next_point.x - current_point.x
+        delta_y = next_point.y - current_point.y
+        next_dir = "turn_{}".format(Direction((delta_x, delta_y)).name.lower())
+        self.action_queue.append(next_dir)
+        self.action_queue.append("move_forward")
 
     def run(self, grid):  # take a turn
+        # if there are pending actions do them first
         if len(self.action_queue) > 0:
             action = self.action_queue.pop(0)
             self.do_action(action, grid)
-        # put decision logic here
-        self.move_backward(grid)
+        # if following a path, get the next point
+        # and queue the next actions to move there
+        elif len(self.path) > 0:
+            next_point = self.path.pop(0)
+            self.next_action_from_path(self.location, next_point)
+            action = self.action_queue.pop(0)
+            self.do_action(action, grid)
+        # if charging, charge to full
+        elif self.location == self.charger_port and self.battery < BATTERY_FULL:
+            print("Charging: Battery is now: {}".format(self.battery))
+            self.battery = self.battery + BATTERY_CHARGE
+        # if battery is low, go to the charger
+        elif self.battery <= BATTERY_LOW:
+            print("BATTERY LOW: {}".format(self.battery))
+            self.path = find_path(grid, self.location, self.charger_port)
+            self.path.pop(0)
+        # if over a dirty or filthy location, vacuum it
+        elif grid[self.location].name.endswith("AND_DIRTY") or grid[self.location].name.endswith("AND_FILTHY"):
+            self.vacuum(grid)
+        # if over a clean location, find dirt to clean
+        else:
+            self.find_dirt(grid)
 
     def do_action(self, action, grid):
         if action is Action.MOVE_FORWARD or action is Action.MOVE_BACKWARD:
             getattr(self, action.value)(grid)
         else:
             getattr(self, action.value)()
+
+    def find_dirt(self, grid):
+        if self.no_dirt_counter >= NO_DIRT_MAX:
+            self.no_dirt_counter = 0
+            self.turn_right()
+        else:
+            self.no_dirt_counter = self.no_dirt_counter + 1
+            self.move_forward(grid)
 
     def score(self, dirty_left, filthy_left):
         elapsed_minutes = (datetime.now() - self.start_time).seconds / SECONDS_PER_MINUTE
@@ -139,21 +179,18 @@ class Robovac:
         self.battery = self.battery - MOVE_DRAIN
         next_location = self.location.minus(self.direction)
         if can_enter(grid, next_location):
-            # print("{}: Exiting {}, Entering {}".format(self.name, self.location, next_location))
-            # print("Before Grid: current location: {}, next location: {}".format(grid[self.location], grid[next_location]))
             grid.enter(next_location, self.name)
             grid.exit(self.location, self.name)
-            # print("After Grid: current location: {}, next location: {}".format(grid[self.location], grid[next_location]))
-            # update internal location
             self.location = next_location
         else:  # cannot move up, back off and change direction
             self.action_queue.insert(0, Action.TURN_LEFT)
 
     def vacuum(self, grid):
         self.battery = self.battery - VACUUM_DRAIN
-        if grid[self.location] is Drawable["{}_AND_FILTHY".format(self.name)]:
-            grid[self.location] = Drawable["{}_AND_DIRTY".format(self.name)]
+        self.no_dirt_counter = 0
+        if grid[self.location].name.endswith('FILTHY'):
+            grid[self.location] = Drawable["{}_AND_DIRTY".format(self.name.name)]
             self.filthy_cleaned = self.filthy_cleaned + 1
-        elif grid[self.location] is Drawable["{}_AND_DIRTY".format(self.name)]:
-            grid[self.location] = Drawable[self.name]
+        elif grid[self.location].name.endswith('DIRTY'):
+            grid[self.location] = self.name
             self.dirty_cleaned = self.dirty_cleaned + 1
