@@ -32,133 +32,133 @@ class Grid:
         self.array[key.x][key.y] = value.value
 
     def enter(self, location, mover):
-        current = self.array[location.x][location.y]
+        current = Drawable(self.array[location.x][location.y])
         if mover is Drawable.ROBOVAC_1:
             if current is Drawable.CLEAN:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_1
+                self.array[location.x][location.y] = Drawable.ROBOVAC_1.value
             elif current is Drawable.DIRTY:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_1_AND_DIRTY
+                self.array[location.x][location.y] = Drawable.ROBOVAC_1_AND_DIRTY.value
             elif current is Drawable.FILTHY:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_1_AND_FILTHY
+                self.array[location.x][location.y] = Drawable.ROBOVAC_1_AND_FILTHY.value
 
         elif mover is Drawable.ROBOVAC_2:
             if current is Drawable.CLEAN:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_2
+                self.array[location.x][location.y] = Drawable.ROBOVAC_2.value
             elif current is Drawable.DIRTY:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_2_AND_DIRTY
+                self.array[location.x][location.y] = Drawable.ROBOVAC_2_AND_DIRTY.value
             elif current is Drawable.FILTHY:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_2_AND_FILTHY
+                self.array[location.x][location.y] = Drawable.ROBOVAC_2_AND_FILTHY.value
 
         elif mover is Drawable.ROBOVAC_3:
             if current is Drawable.CLEAN:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_3
+                self.array[location.x][location.y] = Drawable.ROBOVAC_3.value
             elif current is Drawable.DIRTY:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_3_AND_DIRTY
+                self.array[location.x][location.y] = Drawable.ROBOVAC_3_AND_DIRTY.value
             elif current is Drawable.FILTHY:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_3_AND_FILTHY
+                self.array[location.x][location.y] = Drawable.ROBOVAC_3_AND_FILTHY.value
 
         elif mover is Drawable.ROBOVAC_4:
             if current is Drawable.CLEAN:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_4
+                self.array[location.x][location.y] = Drawable.ROBOVAC_4.value
             elif current is Drawable.DIRTY:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_4_AND_DIRTY
+                self.array[location.x][location.y] = Drawable.ROBOVAC_4_AND_DIRTY.value
             elif current is Drawable.FILTHY:
-                self.array[location.x][location.y] = Drawable.ROBOVAC_4_AND_FILTHY
+                self.array[location.x][location.y] = Drawable.ROBOVAC_4_AND_FILTHY.value
 
         elif mover is Drawable.DOG_1:
             if current is Drawable.CLEAN:
-                self.array[location.x][location.y] = Drawable.DOG_1
+                self.array[location.x][location.y] = Drawable.DOG_1.value
             elif current is Drawable.DIRTY:
-                self.array[location.x][location.y] = Drawable.DOG_1_AND_DIRTY
+                self.array[location.x][location.y] = Drawable.DOG_1_AND_DIRTY.value
             elif current is Drawable.FILTHY:
-                self.array[location.x][location.y] = Drawable.DOG_1_AND_FILTHY
+                self.array[location.x][location.y] = Drawable.DOG_1_AND_FILTHY.value
 
         elif mover is Drawable.DOG_2:
             if current is Drawable.CLEAN:
-                self.array[location.x][location.y] = Drawable.DOG_2
+                self.array[location.x][location.y] = Drawable.DOG_2.value
             elif current is Drawable.DIRTY:
-                self.array[location.x][location.y] = Drawable.DOG_2_AND_DIRTY
+                self.array[location.x][location.y] = Drawable.DOG_2_AND_DIRTY.value
             elif current is Drawable.FILTHY:
-                self.array[location.x][location.y] = Drawable.DOG_2_AND_FILTHY
+                self.array[location.x][location.y] = Drawable.DOG_2_AND_FILTHY.value
 
         elif mover is Drawable.DOG_3:
             if current is Drawable.CLEAN:
-                self.array[location.x][location.y] = Drawable.DOG_3
+                self.array[location.x][location.y] = Drawable.DOG_3.value
             elif current is Drawable.DIRTY:
-                self.array[location.x][location.y] = Drawable.DOG_3_AND_DIRTY
+                self.array[location.x][location.y] = Drawable.DOG_3_AND_DIRTY.value
             elif current is Drawable.FILTHY:
-                self.array[location.x][location.y] = Drawable.DOG_3_AND_FILTHY
+                self.array[location.x][location.y] = Drawable.DOG_3_AND_FILTHY.value
 
         elif mover is Drawable.DOG_4:
             if current is Drawable.CLEAN:
-                self.array[location.x][location.y] = Drawable.DOG_4
+                self.array[location.x][location.y] = Drawable.DOG_4.value
             elif current is Drawable.DIRTY:
-                self.array[location.x][location.y] = Drawable.DOG_4_AND_DIRTY
+                self.array[location.x][location.y] = Drawable.DOG_4_AND_DIRTY.value
             elif current is Drawable.FILTHY:
-                self.array[location.x][location.y] = Drawable.DOG_4_AND_FILTHY
+                self.array[location.x][location.y] = Drawable.DOG_4_AND_FILTHY.value
 
     def exit(self, location, mover):
-        current = self.array[location.x][location.y]
+        current = Drawable(self.array[location.x][location.y])
         if mover is Drawable.ROBOVAC_1:
             if current is Drawable.ROBOVAC_1:
-                self.array[location.x][location.y] = Drawable.CLEAN    
+                self.array[location.x][location.y] = Drawable.CLEAN.value
             elif current is Drawable.ROBOVAC_1_AND_DIRTY:
-                self.array[location.x][location.y] = Drawable.DIRTY
+                self.array[location.x][location.y] = Drawable.DIRTY.value
             elif current is Drawable.ROBOVAC_1_AND_FILTHY:
-                self.array[location.x][location.y] = Drawable.FILTHY
+                self.array[location.x][location.y] = Drawable.FILTHY.value
 
         elif mover is Drawable.ROBOVAC_2:
             if current is Drawable.ROBOVAC_2:
-                self.array[location.x][location.y] = Drawable.CLEAN    
+                self.array[location.x][location.y] = Drawable.CLEAN.value
             elif current is Drawable.ROBOVAC_2_AND_DIRTY:
-                self.array[location.x][location.y] = Drawable.DIRTY
+                self.array[location.x][location.y] = Drawable.DIRTY.value
             elif current is Drawable.ROBOVAC_2_AND_FILTHY:
-                self.array[location.x][location.y] = Drawable.FILTHY
+                self.array[location.x][location.y] = Drawable.FILTHY.value
 
         elif mover is Drawable.ROBOVAC_3:
             if current is Drawable.ROBOVAC_3:
-                self.array[location.x][location.y] = Drawable.CLEAN    
+                self.array[location.x][location.y] = Drawable.CLEAN.value
             elif current is Drawable.ROBOVAC_3_AND_DIRTY:
-                self.array[location.x][location.y] = Drawable.DIRTY
+                self.array[location.x][location.y] = Drawable.DIRTY.value
             elif current is Drawable.ROBOVAC_3_AND_FILTHY:
-                self.array[location.x][location.y] = Drawable.FILTHY
+                self.array[location.x][location.y] = Drawable.FILTHY.value
 
         elif mover is Drawable.ROBOVAC_4:
             if current is Drawable.ROBOVAC_4:
-                self.array[location.x][location.y] = Drawable.CLEAN    
+                self.array[location.x][location.y] = Drawable.CLEAN.value
             elif current is Drawable.ROBOVAC_4_AND_DIRTY:
-                self.array[location.x][location.y] = Drawable.DIRTY
+                self.array[location.x][location.y] = Drawable.DIRTY.value
             elif current is Drawable.ROBOVAC_4_AND_FILTHY:
-                self.array[location.x][location.y] = Drawable.FILTHY
+                self.array[location.x][location.y] = Drawable.FILTHY.value
 
         elif mover is Drawable.DOG_1:
             if current is Drawable.DOG_1:
-                self.array[location.x][location.y] = Drawable.CLEAN    
+                self.array[location.x][location.y] = Drawable.CLEAN.value
             elif current is Drawable.DOG_1_AND_DIRTY:
-                self.array[location.x][location.y] = Drawable.DIRTY
+                self.array[location.x][location.y] = Drawable.DIRTY.value
             elif current is Drawable.DOG_1_AND_FILTHY:
-                self.array[location.x][location.y] = Drawable.FILTHY
+                self.array[location.x][location.y] = Drawable.FILTHY.value
 
         elif mover is Drawable.DOG_2:
             if current is Drawable.DOG_2:
-                self.array[location.x][location.y] = Drawable.CLEAN    
+                self.array[location.x][location.y] = Drawable.CLEAN.value
             elif current is Drawable.DOG_2_AND_DIRTY:
-                self.array[location.x][location.y] = Drawable.DIRTY
+                self.array[location.x][location.y] = Drawable.DIRTY.value
             elif current is Drawable.DOG_2_AND_FILTHY:
-                self.array[location.x][location.y] = Drawable.FILTHY
+                self.array[location.x][location.y] = Drawable.FILTHY.value
 
         elif mover is Drawable.DOG_3:
             if current is Drawable.DOG_3:
-                self.array[location.x][location.y] = Drawable.CLEAN    
+                self.array[location.x][location.y] = Drawable.CLEAN.value
             elif current is Drawable.DOG_3_AND_DIRTY:
-                self.array[location.x][location.y] = Drawable.DIRTY
+                self.array[location.x][location.y] = Drawable.DIRTY.value
             elif current is Drawable.DOG_3_AND_FILTHY:
-                self.array[location.x][location.y] = Drawable.FILTHY
+                self.array[location.x][location.y] = Drawable.FILTHY.value
 
         elif mover is Drawable.DOG_4:
             if current is Drawable.DOG_4:
-                self.array[location.x][location.y] = Drawable.CLEAN    
+                self.array[location.x][location.y] = Drawable.CLEAN.value
             elif current is Drawable.DOG_4_AND_DIRTY:
-                self.array[location.x][location.y] = Drawable.DIRTY
+                self.array[location.x][location.y] = Drawable.DIRTY.value
             elif current is Drawable.DOG_4_AND_FILTHY:
-                self.array[location.x][location.y] = Drawable.FILTHY
+                self.array[location.x][location.y] = Drawable.FILTHY.value

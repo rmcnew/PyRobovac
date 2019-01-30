@@ -17,6 +17,7 @@
 # robovac module
 from datetime import datetime
 
+from action import Action
 from direction import Direction
 from shared import *
 
@@ -32,6 +33,19 @@ class Robovac:
         self.filthy_cleaned = 0
         self.start_time = datetime.now()
         self.action_queue = []
+
+    def run(self, grid):  # take a turn
+        if len(self.action_queue) > 0:
+            action = self.action_queue.pop(0)
+            self.do_action(action, grid)
+        # put decision logic here
+        self.move_backward(grid)
+
+    def do_action(self, action, grid):
+        if action is Action.MOVE_FORWARD or action is Action.MOVE_BACKWARD:
+            getattr(self, action.value)(grid)
+        else:
+            getattr(self, action.value)()
 
     def score(self, dirty_left, filthy_left):
         elapsed_minutes = (datetime.now() - self.start_time).seconds / SECONDS_PER_MINUTE
@@ -72,6 +86,44 @@ class Robovac:
         self.battery = self.battery - MOVE_DRAIN
         self.direction = Direction.NORTHWEST
 
+    def turn_left(self):
+        self.battery = self.battery - MOVE_DRAIN
+        if self.direction is Direction.NORTH:
+            self.direction = Direction.WEST
+        elif self.direction is Direction.NORTHEAST:
+            self.direction = Direction.NORTHWEST
+        elif self.direction is Direction.EAST:
+            self.direction = Direction.NORTH
+        elif self.direction is Direction.SOUTHEAST:
+            self.direction = Direction.NORTHEAST
+        elif self.direction is Direction.SOUTH:
+            self.direction = Direction.EAST
+        elif self.direction is Direction.SOUTHWEST:
+            self.direction = Direction.SOUTHEAST
+        elif self.direction is Direction.WEST:
+            self.direction = Direction.SOUTH
+        elif self.direction is Direction.NORTHWEST:
+            self.direction = Direction.SOUTHWEST
+
+    def turn_right(self):
+        self.battery = self.battery - MOVE_DRAIN
+        if self.direction is Direction.NORTH:
+            self.direction = Direction.EAST
+        elif self.direction is Direction.NORTHEAST:
+            self.direction = Direction.SOUTHEAST
+        elif self.direction is Direction.EAST:
+            self.direction = Direction.SOUTH
+        elif self.direction is Direction.SOUTHEAST:
+            self.direction = Direction.SOUTHWEST
+        elif self.direction is Direction.SOUTH:
+            self.direction = Direction.WEST
+        elif self.direction is Direction.SOUTHWEST:
+            self.direction = Direction.NORTHWEST
+        elif self.direction is Direction.WEST:
+            self.direction = Direction.NORTH
+        elif self.direction is Direction.NORTHWEST:
+            self.direction = Direction.NORTHEAST
+
     def move_forward(self, grid):
         self.battery = self.battery - MOVE_DRAIN
         next_location = self.location.plus(self.direction)
@@ -81,18 +133,21 @@ class Robovac:
             # update internal location
             self.location = next_location
         else:  # cannot move up, back off and change direction
-            self.action_queue.insert(0, TURN_LEFT)
+            self.action_queue.insert(0, Action.TURN_LEFT)
 
     def move_backward(self, grid):
         self.battery = self.battery - MOVE_DRAIN
         next_location = self.location.minus(self.direction)
         if can_enter(grid, next_location):
+            # print("{}: Exiting {}, Entering {}".format(self.name, self.location, next_location))
+            # print("Before Grid: current location: {}, next location: {}".format(grid[self.location], grid[next_location]))
             grid.enter(next_location, self.name)
             grid.exit(self.location, self.name)
+            # print("After Grid: current location: {}, next location: {}".format(grid[self.location], grid[next_location]))
             # update internal location
             self.location = next_location
         else:  # cannot move up, back off and change direction
-            self.action_queue.insert(0, TURN_LEFT)
+            self.action_queue.insert(0, Action.TURN_LEFT)
 
     def vacuum(self, grid):
         self.battery = self.battery - VACUUM_DRAIN

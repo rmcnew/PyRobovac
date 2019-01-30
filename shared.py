@@ -71,13 +71,6 @@ DIRTY_MISSED_SCORE = -1
 FILTHY_MISSED_SCORE = -2
 SECONDS_PER_MINUTE = 60
 
-# robovac actions
-TURN_LEFT = "turn_left"
-TURN_RIGHT = "turn_right"
-MOVE_FORWARD = "move_forward"
-MOVE_BACKWARD = "move_backward"
-VACUUM = "vacuum"
-
 # dirt
 DIRTY_MIN = 1000
 FILTHY_MIN = 300
