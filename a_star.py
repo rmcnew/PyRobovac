@@ -16,8 +16,6 @@
 
 # A* path finding
 from math import fabs
-from heapq import *
-import json
 
 from direction import Direction
 from shared import *
@@ -29,68 +27,78 @@ def manhattan_distance(from_location, to_location):
 
 
 START = None
+END = None
 
 
-def get_enterable_adjacent_cells(grid, location):
-    cells = []
+def get_enterable_adjacent_locations(grid, location):
+    locations = []
     for direction in Direction:
         candidate = location.plus(direction)
         if can_enter(grid, candidate):
-            cells.append(candidate)
-    return cells
-        
+            locations.append(candidate)
+    return locations
 
-# extract path 
-def extract_path(closed_list, to_location):
-    path = []
-    node = closed_list[json.dumps(to_location)]
-    while node.parent_location != START:
-        path.insert(0, node.location)
-        node = closed_list[json.dumps(node.parent_location)]
-    return path
-    
 
 # use A* algorithm to find a path 
 def find_path(grid, from_location, to_location):
-    nodes = []
-    node_index = 0
+    from_node = Node(from_location, 0, 0, START)
+    to_node = Node(to_location, 0, 0, END)
+
+    # open_list would be better as a priority queue, but
+    # python's heapq does not easily work with Node objects
     open_list = []
-    closed_list = {}
-    start_node = Node(from_location, 0, manhattan_distance(from_location, to_location), START)
-    nodes.append(start_node)
-    heappush(open_list, (start_node.cost, node_index))
-    node_index = node_index + 1
+    closed_list = []
+
+    open_list.append(from_node)
+
     while len(open_list) > 0:
-        cost, current_node_index = heappop(open_list)
-        current_node = nodes[current_node_index]
-        closed_list[current_node.location.to_str()] = current_node
+        current_node = open_list[0]
+        current_index = 0
+        # find the lowest cost node in open_list
+        for index, node in enumerate(open_list):
+            if node.cost < current_node.cost:
+                current_node = node
+                current_index = index
 
-        if to_location.to_str() in closed_list:
-            path = extract_path(closed_list, to_location)
-            print(path)
-            return path
+        # move lowest cost node from open list to closed list
+        open_list.pop(current_index)
+        closed_list.append(current_node)
 
-        adjacent_cells = get_enterable_adjacent_cells(grid, current_node.location)
-        
-        for cell in adjacent_cells:
-            # print(cell)
-            if cell.to_str() in closed_list:
+        # if we have reached the goal, return the path
+        if current_node == to_node:
+            path = []
+            current = current_node
+            while current is not START:
+                path.append(current.location)
+                current = current.parent
+            return path[::-1]  # reverse the path
+
+        # otherwise, get adjacent locations
+        adjacent_locations = get_enterable_adjacent_locations(grid, current_node.location)
+
+        # create nodes for the adjacent locations
+        for adjacent_location in adjacent_locations:
+            adjacent_node = Node(adjacent_location,
+                                 current_node.movement_cost + 1,
+                                 manhattan_distance(adjacent_location, to_location),
+                                 current_node)
+
+            # selectively add the adjacent nodes to the open list
+            if adjacent_node in closed_list:
                 continue
-            if cell not in open_list:
-                node_to_add = Node(cell,
-                                   current_node.movement_cost + 1,
-                                   manhattan_distance(cell, to_location),
-                                   current_node.location)
-                nodes.append(node_to_add)
-                heappush(open_list, (node_to_add.cost, node_index))
-                node_index = node_index + 1
-    return None
+            for open_node in open_list:
+                if adjacent_node == open_node and adjacent_node.cost > open_node.cost:
+                    continue
+            open_list.append(adjacent_node)
 
 
 class Node(object):
-    def __init__(self, location, movement_cost, heuristic_cost, parent_location):
+    def __init__(self, location, movement_cost, heuristic_cost, parent):
         self.location = location
         self.movement_cost = movement_cost
         self.heuristic_cost = heuristic_cost
         self.cost = self.movement_cost + self.heuristic_cost
-        self.parent_location = parent_location
+        self.parent = parent
+
+    def __eq__(self, node):
+        return self.location.x == node.location.x and self.location.y == node.location.y

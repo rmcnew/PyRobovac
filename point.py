@@ -24,8 +24,8 @@ class Point:
     def __str__(self):
         return "Point({}, {})".format(self.x, self.y)
 
-    def to_str(self):
-        return "{}_{}".format(self.x, self.y)
+    def __repr__(self):
+        return "Point({}, {})".format(self.x, self.y)
 
     def plus(self, direction):
         return Point(self.x + direction.value[0], self.y + direction.value[1])
