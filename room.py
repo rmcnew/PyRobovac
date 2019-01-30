@@ -28,7 +28,7 @@ from dog import Dog
 # fill a wall block
 def fill_wall_block(block, grid):
     start_x = block.x * int(grid.width / 3)
-    stop_x = (block.x + 1) * int(grid.width / 3)
+    stop_x = (block.x + 1) * int(grid.width / 3) + 1
     start_y = block.y * int(grid.height / 3)
     stop_y = (block.y + 1) * int(grid.height / 3)
     for x in range(start_x, stop_x):
@@ -40,7 +40,7 @@ def fill_wall_block(block, grid):
 def create_walls(grid):
     # create a border wall so robovacs stay inside the window
     for x in range(0, grid.width):
-        grid.array[x][1] = Drawable.WALL.value
+        grid.array[x][0] = Drawable.WALL.value
         grid.array[x][grid.height - 1] = Drawable.WALL.value
     for y in range(0, grid.height):
         grid.array[0][y] = Drawable.WALL.value

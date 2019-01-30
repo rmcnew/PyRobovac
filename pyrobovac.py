@@ -49,11 +49,11 @@ def main():
     DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     BASIC_FONT = pygame.font.Font(SANS_FONT, 18)
     pygame.display.set_caption(ROBOVAC)
-    p1 = get_random_location(grid)
-    while not can_enter(grid, p1):
-        p1 = get_random_location(grid)
-    path = find_path(grid, robovacs[0].location, p1)
-    print(path)
+    # p1 = get_random_location(grid)
+    # while not can_enter(grid, p1):
+    #     p1 = get_random_location(grid)
+    # path = find_path(grid, robovacs[0].location, p1)
+    # print(path)
     run_game()
 
 

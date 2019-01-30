@@ -32,7 +32,6 @@ class Robovac:
         self.filthy_cleaned = 0
         self.start_time = datetime.now()
         self.action_queue = []
-        self.cell_below = Drawable.CLEAN
 
     def score(self, dirty_left, filthy_left):
         elapsed_minutes = (datetime.now() - self.start_time).seconds / SECONDS_PER_MINUTE
@@ -77,14 +76,8 @@ class Robovac:
         self.battery = self.battery - MOVE_DRAIN
         next_location = self.location.plus(self.direction)
         if can_enter(grid, next_location):
-            # save the cell below for the next location
-            next_cell_below = grid[next_location]
-            # put the current cell below back on the grid
-            grid[self.location] = self.cell_below
-            # update the grid for the robovac's next location
-            grid[next_location] = self.name
-            # set the cell below to the next location
-            self.cell_below = next_cell_below
+            grid.enter(next_location, self.name)
+            grid.exit(self.location, self.name)
             # update internal location
             self.location = next_location
         else:  # cannot move up, back off and change direction
@@ -94,24 +87,18 @@ class Robovac:
         self.battery = self.battery - MOVE_DRAIN
         next_location = self.location.minus(self.direction)
         if can_enter(grid, next_location):
-            # save the cell below for the next location
-            next_cell_below = grid[next_location]
-            # put the current cell below back on the grid
-            grid[self.location] = self.cell_below
-            # update the grid for the robovac's next location
-            grid[next_location] = self.name
-            # set the cell below to the next location
-            self.cell_below = next_cell_below
+            grid.enter(next_location, self.name)
+            grid.exit(self.location, self.name)
             # update internal location
             self.location = next_location
         else:  # cannot move up, back off and change direction
             self.action_queue.insert(0, TURN_LEFT)
 
-    def vacuum(self):
+    def vacuum(self, grid):
         self.battery = self.battery - VACUUM_DRAIN
-        if self.cell_below == Drawable.FILTHY.value:
-            self.cell_below = Drawable.DIRTY.value
+        if grid[self.location] is Drawable["{}_AND_FILTHY".format(self.name)]:
+            grid[self.location] = Drawable["{}_AND_DIRTY".format(self.name)]
             self.filthy_cleaned = self.filthy_cleaned + 1
-        elif self.cell_below == Drawable.DIRTY.value:
-            self.cell_below = Drawable.CLEAN.value
+        elif grid[self.location] is Drawable["{}_AND_DIRTY".format(self.name)]:
+            grid[self.location] = Drawable[self.name]
             self.dirty_cleaned = self.dirty_cleaned + 1
