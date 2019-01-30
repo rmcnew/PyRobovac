@@ -109,6 +109,6 @@ def is_filthy(grid, point):
 
 def can_enter(grid, point):
     return on_grid(grid, point) and \
-           (grid[point.x][point.y] == Drawable.CLEAN.value or
-            grid[point.x][point.y] == Drawable.DIRTY.value or
-            grid[point.x][point.y] == Drawable.FILTHY.value)
+           (grid.array[point.x][point.y] == Drawable.CLEAN.value or
+            grid.array[point.x][point.y] == Drawable.DIRTY.value or
+            grid.array[point.x][point.y] == Drawable.FILTHY.value)
