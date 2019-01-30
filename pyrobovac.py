@@ -64,12 +64,12 @@ def run_game():
     while True:  # main game loop
         # check for q or Esc keypress or window close events to quit
         check_for_quit()
-        # robovacs decide
+        # robovacs decide and move
         for robovac in robovacs:
             robovac.run(grid)
-        # move robovacs
-
         # move dogs
+        for dog in dogs:
+            dog.run(grid)
 
         # update display
         DISPLAY_SURF.fill(BG_COLOR.value)

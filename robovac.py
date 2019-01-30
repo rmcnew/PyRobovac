@@ -16,6 +16,7 @@
 
 # robovac module
 from datetime import datetime
+from math import fabs
 import random
 
 from action import Action
@@ -41,7 +42,11 @@ class Robovac:
 
     def next_action_from_path(self, current_point, next_point):
         delta_x = next_point.x - current_point.x
+        if fabs(delta_x) > 1:
+            delta_x = int(delta_x / fabs(delta_x))
         delta_y = next_point.y - current_point.y
+        if fabs(delta_y) > 1:
+            delta_y = int(delta_y / fabs(delta_y))
         next_dir = "turn_{}".format(Direction((delta_x, delta_y)).name).upper()
         self.action_queue.append(Action[next_dir])
         self.action_queue.append(Action["MOVE_FORWARD"])
@@ -168,9 +173,9 @@ class Robovac:
     def turn_random(self):
         index = random.randint(0, 7)
         current_index = 0
-        for dir in Direction:
+        for direction in Direction:
             if current_index == index:
-                getattr(self, "turn_{}".format(dir.name.lower()))()
+                getattr(self, "turn_{}".format(direction.name.lower()))()
             current_index = current_index + 1
 
     def move_forward(self, grid):

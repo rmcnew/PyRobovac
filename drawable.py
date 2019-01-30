@@ -89,7 +89,7 @@ class Drawable(Enum):
             return Colors.GREEN, Colors.GREEN
         elif self.value == 14 or self.value == 28 or self.value == 32:
             return Colors.BLUE, Colors.BLUE
-        elif self.value == 15 or self.value == 29 or self.value == 333:
+        elif self.value == 15 or self.value == 29 or self.value == 33:
             return Colors.VIOLET, Colors.VIOLET
         elif self.value == 16:
             return Colors.BROWN, Colors.BROWN
