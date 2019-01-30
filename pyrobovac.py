@@ -24,6 +24,7 @@ from pygame.locals import *
 from shared import *
 from drawable import Drawable
 import room
+from a_star import *
 
 # setup command line argument parsing
 parser = argparse.ArgumentParser()
@@ -49,6 +50,7 @@ def main():
     DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     BASIC_FONT = pygame.font.Font(SANS_FONT, 18)
     pygame.display.set_caption(ROBOVAC)
+    # find_path(grid, robovacs[0].x, robovacs[0].y, 0, 0)
     run_game()
 
 
