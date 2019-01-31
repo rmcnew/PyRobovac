@@ -51,10 +51,27 @@ You can specify how many robovacs should run with the -r command line argument:
 
 python3 pyrobovac.py -r 4
 
-There can be up to four robovacs.  (There must be at least one robovac.)
+There can be between 1 to 4 robovacs.  The default is 1 robovac.
+
 
 You can specify how many dogs should run with the -d command line argument:
 
 python3 pyrobovac.py -r 3 -d 2
 
-There can be zero to four dogs.
+There can be 0 to 4 dogs.  By default, there are 0 dogs.
+
+Dogs track dirt from filthy areas, making clean areas dirty.
+
+
+You can specify how much soil and dirt there should be in the room with the -s command line argument:
+
+python3 pyrobovac -s 9
+
+The soil level can be between 1 to 9.  The default soil level is 5.
+
+
+You can specify how much time is allowed in minutes using the -t command line argument:
+
+python3 pyrobovac -t 4
+
+The time must be between 1 to 60 minutes and defaults to 5 minutes.
