@@ -31,6 +31,17 @@ class Grid:
     def __setitem__(self, key, value):  # key must be a Point, value must be a Drawable
         self.array[key.x][key.y] = value.value
 
+    def get_dirty_counts(self):
+        dirty_count = 0
+        filthy_count = 0
+        for x in range(0, self.width):
+            for y in range(0, self.height):
+                if Drawable(self.array[x][y]).name.endswith('DIRTY'):
+                    dirty_count = dirty_count + 1
+                elif Drawable(self.array[x][y]).name.endswith('FILTHY'):
+                    filthy_count = filthy_count + 1
+        return dirty_count, filthy_count
+
     def enter(self, location, mover):
         current = Drawable(self.array[location.x][location.y])
         if mover is Drawable.ROBOVAC_1:

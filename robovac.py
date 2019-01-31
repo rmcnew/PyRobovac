@@ -26,7 +26,7 @@ from shared import *
 
 
 class Robovac:
-    def __init__(self, start_location, charger_location, name):
+    def __init__(self, start_location, charger_location, name, index):
         self.location = start_location
         self.charger_port = start_location
         self.charger_location = charger_location
@@ -39,6 +39,7 @@ class Robovac:
         self.action_queue = []
         self.path = []
         self.no_dirt_counter = 0
+        self.score_position = ((300 * index) - 200, 10)
 
     def next_action_from_path(self, current_point, next_point):
         delta_x = next_point.x - current_point.x
@@ -65,11 +66,11 @@ class Robovac:
             self.do_action(action, grid)
         # if charging, charge to full
         elif self.location == self.charger_port and self.battery < BATTERY_FULL:
-            print("Charging: Battery is now: {}".format(self.battery))
+            print("{} Charging: Battery is now: {}".format(self.name.name, self.battery))
             self.battery = self.battery + BATTERY_CHARGE
         # if battery is low, go to the charger
         elif self.battery <= BATTERY_LOW:
-            print("BATTERY LOW: {}".format(self.battery))
+            print("{} BATTERY LOW: {}".format(self.name.name, self.battery))
             self.path = find_path(grid, self.location, self.charger_port)
             self.path.pop(0)
         # if over a dirty or filthy location, vacuum it
@@ -94,11 +95,11 @@ class Robovac:
             self.move_forward(grid)
 
     def score(self, dirty_left, filthy_left):
-        elapsed_minutes = (datetime.now() - self.start_time).seconds / SECONDS_PER_MINUTE
+        elapsed_minutes = int((datetime.now() - self.start_time).seconds / SECONDS_PER_MINUTE)
         raw_points = (self.dirty_cleaned * DIRTY_CLEANED_SCORE) + (self.filthy_cleaned * FILTHY_CLEANED_SCORE)
-        weighted_points = raw_points / elapsed_minutes
-        penalty = (dirty_left * DIRTY_MISSED_SCORE) + (filthy_left * FILTHY_MISSED_SCORE)
-        return weighted_points + penalty
+        weighted_points = raw_points
+        penalty = ((dirty_left * DIRTY_MISSED_SCORE) + (filthy_left * FILTHY_MISSED_SCORE)) * elapsed_minutes
+        return max(weighted_points - penalty, 0)
 
     def turn_north(self):
         self.battery = self.battery - MOVE_DRAIN

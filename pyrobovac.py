@@ -43,11 +43,12 @@ dogs = room.create_dogs(grid, args.d)
 
 
 def main():
-    global FPS_CLOCK, DISPLAY_SURF, BASIC_FONT
+    global FPS_CLOCK, DISPLAY_SURF, BASIC_FONT, SCORE_FONT
     pygame.init()
     FPS_CLOCK = pygame.time.Clock()
     DISPLAY_SURF = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     BASIC_FONT = pygame.font.Font(SANS_FONT, 18)
+    SCORE_FONT = pygame.font.Font(SANS_FONT, 36)
     pygame.display.set_caption(ROBOVAC)
     run_game()
 
@@ -74,7 +75,7 @@ def run_game():
         # update display
         DISPLAY_SURF.fill(BG_COLOR.value)
         draw_grid()
-
+        draw_scores()
         pygame.display.update()
         FPS_CLOCK.tick(FPS)
 
@@ -101,6 +102,17 @@ def draw_grid():
                 pygame.draw.rect(DISPLAY_SURF, lineColor.value, rect)
                 inner_rect = pygame.Rect(cell_x + 4, cell_y + 4, CELL_SIZE - 8, CELL_SIZE - 8)
                 pygame.draw.rect(DISPLAY_SURF, fillColor.value, inner_rect)
+
+
+def draw_scores():
+    dirty_left, filthy_left = grid.get_dirty_counts()
+    for robovac in robovacs:
+        surf = SCORE_FONT.render('Score: %s' % str(int(robovac.score(dirty_left, filthy_left))),
+                                 True,
+                                 robovac.name.color[0].value)
+        rect = surf.get_rect()
+        rect.topleft = robovac.score_position
+        DISPLAY_SURF.blit(surf, rect)
 
 
 if __name__ == '__main__':

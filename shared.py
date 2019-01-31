@@ -68,8 +68,8 @@ FURNITURE_COUNT = 7
 # score
 DIRTY_CLEANED_SCORE = 10
 FILTHY_CLEANED_SCORE = 20
-DIRTY_MISSED_SCORE = -1
-FILTHY_MISSED_SCORE = -2
+DIRTY_MISSED_SCORE = 0.2
+FILTHY_MISSED_SCORE = 0.5
 SECONDS_PER_MINUTE = 60
 
 # dirt
@@ -85,7 +85,7 @@ def get_random_location(grid):
 
 
 def get_random_block():
-    return Point(random.randint(0, 2), random.randint(0, 2))
+    return Point(random.randint(0, 3), random.randint(0, 3))
 
 
 def on_grid(grid, point):

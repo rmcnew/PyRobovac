@@ -27,10 +27,10 @@ from dog import Dog
 
 # fill a wall block
 def fill_wall_block(block, grid):
-    start_x = block.x * int(grid.width / 3)
-    stop_x = (block.x + 1) * int(grid.width / 3) + 1
-    start_y = block.y * int(grid.height / 3)
-    stop_y = (block.y + 1) * int(grid.height / 3)
+    start_x = block.x * int(grid.width / 4)
+    stop_x = (block.x + 1) * int(grid.width / 4)
+    start_y = block.y * int(grid.height / 4)
+    stop_y = (block.y + 1) * int(grid.height / 4)
     for x in range(start_x, stop_x):
         for y in range(start_y, stop_y):
             grid.array[x][y] = Drawable.WALL.value
@@ -46,7 +46,7 @@ def create_walls(grid):
         grid.array[0][y] = Drawable.WALL.value
         grid.array[grid.width - 1][y] = Drawable.WALL.value
     # randomly generate some wall sections to give the room an unusual shape:
-    # 1) divide the room into a 3 x 3 grid
+    # 1) divide the room into a 4 x 4 grid
     # 2) randomly choose two blocks and fill them with wall
     first_block = get_random_block()
     # print("first block: {}".format(first_block))
@@ -123,7 +123,7 @@ def create_robovacs(grid, count):
         if is_clean(grid, charger_location) and is_clean(grid, robovac_location):
             grid[charger_location] = Drawable["CHARGER_" + str(robovac_index)]
             grid[robovac_location] = Drawable["ROBOVAC_" + str(robovac_index)]
-            robovacs.append(Robovac(robovac_location, charger_location, "ROBOVAC_" + str(robovac_index)))
+            robovacs.append(Robovac(robovac_location, charger_location, "ROBOVAC_" + str(robovac_index), robovac_index))
             robovac_index = robovac_index + 1
     return robovacs
 
