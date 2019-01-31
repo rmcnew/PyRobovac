@@ -26,8 +26,10 @@ from point import Point
 FPS = 30
 
 # game window
+TOP_BUFFER = 50
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 960
+BOTTOM_BUFFER = 100
 
 # cell size and game grid
 CELL_SIZE = 20
@@ -73,11 +75,14 @@ FILTHY_MISSED_SCORE = 0.5
 SECONDS_PER_MINUTE = 60
 
 # dirt
-DIRTY_MIN = 400
-FILTHY_MIN = 120
+DIRTY_MAX = 400.0
+FILTHY_MAX = 120.0
 
 # dirt seeking
 NO_DIRT_MAX = 11
+
+# legend scale factor
+LEGEND_SCALE = 19
 
 
 def get_random_location(grid):

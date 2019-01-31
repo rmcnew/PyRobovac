@@ -17,10 +17,9 @@
 # robovac module
 from datetime import datetime
 from math import fabs
-import random
 
-from action import Action
 from a_star import find_path
+from action import Action
 from direction import Direction
 from shared import *
 
@@ -35,7 +34,6 @@ class Robovac:
         self.battery = BATTERY_FULL
         self.dirty_cleaned = 0
         self.filthy_cleaned = 0
-        self.start_time = datetime.now()
         self.action_queue = []
         self.path = []
         self.no_dirt_counter = 0
@@ -94,8 +92,7 @@ class Robovac:
             self.no_dirt_counter = self.no_dirt_counter + 1
             self.move_forward(grid)
 
-    def score(self, dirty_left, filthy_left):
-        elapsed_minutes = int((datetime.now() - self.start_time).seconds / SECONDS_PER_MINUTE)
+    def score(self, dirty_left, filthy_left, elapsed_minutes):
         raw_points = (self.dirty_cleaned * DIRTY_CLEANED_SCORE) + (self.filthy_cleaned * FILTHY_CLEANED_SCORE)
         weighted_points = raw_points
         penalty = ((dirty_left * DIRTY_MISSED_SCORE) + (filthy_left * FILTHY_MISSED_SCORE)) * elapsed_minutes
